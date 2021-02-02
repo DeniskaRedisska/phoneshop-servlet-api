@@ -31,6 +31,13 @@ public class ExceptionHandlerServlet extends HttpServlet {
         Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String servletName = (String) request.getAttribute("javax.servlet.error.servlet_name");
+        String msg = getExceptionInfo(request, throwable, statusCode, servletName);
+        request.setAttribute("errorMsg", msg);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/error.jsp");
+        requestDispatcher.forward(request, response);
+    }
+
+    private String getExceptionInfo(HttpServletRequest request, Throwable throwable, Integer statusCode, String servletName) {
         if (servletName == null) {
             servletName = "Unknown Path Segment";
         }
@@ -49,8 +56,6 @@ public class ExceptionHandlerServlet extends HttpServlet {
             msg.append("The exception message: ").append(throwable.getMessage() != null ?
                     throwable.getMessage() : "Message is missing");
         }
-        request.setAttribute("errorMsg", msg.toString());
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/error.jsp");
-        requestDispatcher.forward(request, response);
+        return msg.toString();
     }
 }

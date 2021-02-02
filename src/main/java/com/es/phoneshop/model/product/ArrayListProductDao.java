@@ -1,25 +1,33 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
+import static com.es.phoneshop.model.product.VerifyUtil.verifyNotNull;
+
 public class ArrayListProductDao implements ProductDao {
 
-    private final List<Product> products = new ArrayList<>();
+    private final List<Product> products;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
     private long maxId;
 
     public ArrayListProductDao() {
+        products = new ArrayList<>();
         initProducts();
+    }
+
+    public ArrayListProductDao(List<Product> list) {
+        products = list;
     }
 
     public long getMaxId() {
@@ -28,15 +36,13 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public Product getProduct(Long id) {
-        if (id == null) throw new NoSuchElementException();
+        verifyNotNull(id);
         readLock.lock();
         try {
             return products.stream()
                     .filter(product -> id.equals(product.getId()))
-                    .filter(product -> product.getStock() > 0)
-                    .filter(product -> product.getPrice() != null)
                     .findAny()
-                    .orElseThrow(NoSuchElementException::new);
+                    .orElseThrow(ProductNotFoundException::new);
         } finally {
             readLock.unlock();
         }
@@ -57,7 +63,7 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public void save(Product product) {
-        if (product == null) throw new RuntimeException("Attempt to save null");
+        verifyNotNull(product);
         writeLock.lock();
         try {
             if (product.getId() != null) {
@@ -80,13 +86,15 @@ public class ArrayListProductDao implements ProductDao {
         products.stream()
                 .filter(p -> product.getId().equals(p.getId()))
                 .findAny()
-                .ifPresentOrElse(val -> products.set(products.indexOf(val), product),
-                        () -> products.add(product));
+                .ifPresentOrElse(
+                        val -> products.set(products.indexOf(val), product),
+                        () -> products.add(product)
+                );
     }
 
     @Override
     public void delete(Long id) {
-        if (id == null) throw new RuntimeException("Attempt to delete product with null id");
+        verifyNotNull(id);
         writeLock.lock();
         try {
             products.removeIf(product -> id.equals(product.getId()));
