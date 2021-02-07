@@ -1,8 +1,10 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.model.product.ArrayListProductDao;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -12,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,22 +22,39 @@ import static org.mockito.Mockito.when;
 public class ProductListPageServletTest {
     @Mock
     private HttpServletRequest request;
+
     @Mock
     private HttpServletResponse response;
+
     @Mock
     private RequestDispatcher requestDispatcher;
 
-    private ProductListPageServlet servlet = new ProductListPageServlet();
+    @Mock
+    private ArrayListProductDao productDao;
+
+    @InjectMocks
+    private final ProductListPageServlet servlet = new ProductListPageServlet();
 
     @Before
-    public void setup(){
+    public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
-
         verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void testDaoFindProducts() throws ServletException, IOException {
+        servlet.doGet(request, response);
+        verify(request).setAttribute(eq("products"), any());
+    }
+
+    @Test
+    public void testDaoInvokedMethod() throws ServletException, IOException {
+        servlet.doGet(request, response);
+        verify(productDao).findProducts();
     }
 }
