@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.ServletContext;
@@ -30,6 +30,7 @@ public class DemoDataServletContextListenerTest {
     @Mock
     private ArrayListProductDao productDao;
 
+    @Spy
     @InjectMocks
     private final DemoDataServletContextListener listener = new DemoDataServletContextListener();
 
@@ -42,9 +43,8 @@ public class DemoDataServletContextListenerTest {
     @Test
     public void testContextInitializedWithDemoData() {
         when((servletContext.getInitParameter(anyString()))).thenReturn("true");
-        DemoDataServletContextListener spy = Mockito.spy(listener);
-        spy.contextInitialized(servletContextEvent);
-        verify(spy).initProducts();
+        listener.contextInitialized(servletContextEvent);
+        verify(listener).initProducts();
     }
 
     @Test
@@ -57,9 +57,8 @@ public class DemoDataServletContextListenerTest {
     @Test
     public void testContextInitializedWithoutDemoData() {
         when((servletContext.getInitParameter(anyString()))).thenReturn("false");
-        DemoDataServletContextListener spy = Mockito.spy(listener);
-        spy.contextInitialized(servletContextEvent);
-        verify(spy, never()).initProducts();
+        listener.contextInitialized(servletContextEvent);
+        verify(listener, never()).initProducts();
     }
 
 }

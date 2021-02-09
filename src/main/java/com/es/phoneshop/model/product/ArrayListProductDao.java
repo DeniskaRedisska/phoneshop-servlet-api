@@ -2,10 +2,7 @@ package com.es.phoneshop.model.product;
 
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -49,7 +46,7 @@ public class ArrayListProductDao implements ProductDao {
             return products.stream()
                     .filter(product -> id.equals(product.getId()))
                     .findAny()
-                    .orElseThrow(()->new ProductNotFoundException(id));
+                    .orElseThrow(() -> new ProductNotFoundException(id));
         } finally {
             readLock.unlock();
         }
@@ -59,55 +56,45 @@ public class ArrayListProductDao implements ProductDao {
     public List<Product> findProducts(String query, SortField sortField, SortType sortType) {
         readLock.lock();
         try {
+            String[] queryWords = (query != null && !query.equals("")) ? query.split("\\s+") : null;
             return products.stream()
-                    .filter(product ->
-                                    query == null ||
-                                    query.equals("") ||
-                                    search(query, product))
                     .filter(product -> product.getStock() > 0)
                     .filter(product -> product.getPrice() != null)
-                    .sorted((p1, p2) -> relevanceSort(query, p1, p2))
+                    .map(product -> Map.entry(product, getNumberOfCollisions(queryWords, product)))
+                    .filter(entry -> entry.getValue() > 0)
                     .sorted(getSortComparator(sortField, sortType))
+                    .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
         } finally {
             readLock.unlock();
         }
     }
 
-    private boolean search(String query, Product product) {
-        return Arrays.stream(query.split("\\s+"))
-                .anyMatch(word -> product.getDescription().toLowerCase()
-                        .contains(word.toLowerCase()));
-    }
-
-
-    private int relevanceSort(String query, Product p1, Product p2) {
-        if (query == null || query.equals("")) return 0;
-        return Long.compare(getNumberOfCollisions(query, p2), getNumberOfCollisions(query, p1));
-    }
-
-    private long getNumberOfCollisions(String query, Product product) {
-        return Arrays.stream(query.split("\\s+"))
-                .filter(word -> product.getDescription().toLowerCase()
-                        .contains(word.toLowerCase()))
+    private long getNumberOfCollisions(String[] queryWords, Product product) {
+        if (queryWords == null) return 1;
+        return Arrays.stream(queryWords).filter(word -> product.getDescription().toLowerCase()
+                .contains(word.toLowerCase()))
                 .count();
     }
 
-    private Comparator<Product> getSortComparator(SortField field, SortType type) {
-        if (field == null) return (o1, o2) -> 0;
+    private Comparator<Map.Entry<Product, Long>> getSortComparator(SortField field, SortType type) {
+        if (field == null || type == null) return this::relevanceSort;
         return Comparator.comparing(
                 product -> {
-                    if (field == SortField.price) return product.getPrice();
-                    else return product.getDescription();
+                    if (field == SortField.price) return product.getKey().getPrice();
+                    else return product.getKey().getDescription();
                 },
                 getOrderTypeComparator(type)
         );
     }
 
     private Comparator<Comparable> getOrderTypeComparator(SortType type) {
-        if (type == null) return (o1, o2) -> 0;
         if (type == SortType.asc) return Comparator.naturalOrder();
         else return Comparator.reverseOrder();
+    }
+
+    private int relevanceSort(Map.Entry<Product, Long> p1, Map.Entry<Product, Long> p2) {
+        return Long.compare(p2.getValue(), p1.getValue());
     }
 
 

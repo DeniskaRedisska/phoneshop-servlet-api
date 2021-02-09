@@ -23,20 +23,30 @@
     <servlet-name>productList</servlet-name>
     <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
   </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>productList</servlet-name>
-    <url-pattern>/products</url-pattern>
-  </servlet-mapping>
 
   <servlet>
     <servlet-name>ExceptionHandler</servlet-name>
     <servlet-class>com.es.phoneshop.web.ExceptionHandlerServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>productDetails</servlet-name>
+    <servlet-class>com.es.phoneshop.web.ProductDetailsPageServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>productList</servlet-name>
+    <url-pattern>/products</url-pattern>
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>ExceptionHandler</servlet-name>
     <url-pattern>/ExceptionHandler</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>productDetails</servlet-name>
+    <url-pattern>/products/*</url-pattern>
   </servlet-mapping>
 
   <error-page>
@@ -48,15 +58,5 @@
     <exception-type>java.lang.Throwable</exception-type >
     <location>/ExceptionHandler</location>
   </error-page>
-
-  <servlet>
-    <servlet-name>productDetails</servlet-name>
-    <servlet-class>com.es.phoneshop.web.ProductDetailsPageServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>productDetails</servlet-name>
-    <url-pattern>/products/*</url-pattern>
-  </servlet-mapping>
 
 </web-app>

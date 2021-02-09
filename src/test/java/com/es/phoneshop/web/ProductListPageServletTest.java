@@ -1,9 +1,13 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.SortField;
+import com.es.phoneshop.model.product.SortType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -14,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,6 +40,12 @@ public class ProductListPageServletTest {
     @InjectMocks
     private final ProductListPageServlet servlet = new ProductListPageServlet();
 
+    @Captor
+    ArgumentCaptor<SortType> sortTypeCaptor;
+
+    @Captor
+    ArgumentCaptor<SortField> sortFieldCaptor;
+
     @Before
     public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
@@ -54,7 +65,12 @@ public class ProductListPageServletTest {
 
     @Test
     public void testDaoInvokedMethod() throws ServletException, IOException {
+        when(request.getParameter("query")).thenReturn("query");
+        when(request.getParameter("order")).thenReturn("asc");
+        when(request.getParameter("sort")).thenReturn("price");
         servlet.doGet(request, response);
-        verify(productDao).findProducts(any(),any(),any());
+        verify(productDao).findProducts(anyString(), sortFieldCaptor.capture(), sortTypeCaptor.capture());
+        assertEquals(SortField.price, sortFieldCaptor.getValue());
+        assertEquals(SortType.asc, sortTypeCaptor.getValue());
     }
 }

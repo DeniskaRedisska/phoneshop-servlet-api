@@ -1,7 +1,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
-<%@ tag %>
 <%@ attribute name="product" required="true" type="com.es.phoneshop.model.product.Product" rtexprvalue="true" %>
 
 <div class="popup">

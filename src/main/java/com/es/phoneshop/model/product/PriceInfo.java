@@ -1,25 +1,22 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDate;
 
 public class PriceInfo {
-    private Date date;
+    private LocalDate date;
     private BigDecimal price;
 
-    public PriceInfo(Date date, BigDecimal price) {
+    public PriceInfo(LocalDate date, BigDecimal price) {
         this.date = date;
         this.price = price;
     }
 
     public String getDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy", Locale.ENGLISH);
-        return sdf.format(date);
+        return date.toString();
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
