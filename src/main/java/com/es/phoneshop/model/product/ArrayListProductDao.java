@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.es.phoneshop.model.product.VerifyUtil.verifyNotNull;
@@ -80,12 +81,14 @@ public class ArrayListProductDao implements ProductDao {
     private Comparator<Map.Entry<Product, Long>> getSortComparator(SortField field, SortType type) {
         if (field == null || type == null) return this::relevanceSort;
         return Comparator.comparing(
-                product -> {
-                    if (field == SortField.price) return product.getKey().getPrice();
-                    else return product.getKey().getDescription();
-                },
+                keyExtractor(field),
                 getOrderTypeComparator(type)
         );
+    }
+
+    private Function<Map.Entry<Product, Long>, Comparable> keyExtractor(SortField field) {
+        if (field == SortField.price) return product -> product.getKey().getPrice();
+        return product -> product.getKey().getDescription();
     }
 
     private Comparator<Comparable> getOrderTypeComparator(SortType type) {
