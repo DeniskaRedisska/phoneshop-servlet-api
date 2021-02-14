@@ -1,8 +1,8 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.SortField;
-import com.es.phoneshop.model.product.SortType;
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.SortField;
+import com.es.phoneshop.dao.SortType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.dao;
 
 public enum SortField {
     price, description

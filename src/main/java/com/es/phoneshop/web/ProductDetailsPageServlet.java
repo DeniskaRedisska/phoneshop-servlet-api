@@ -1,7 +1,11 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.*;
-import com.es.phoneshop.model.product.exceptions.OutOfStockException;
+import com.es.phoneshop.cart.Cart;
+import com.es.phoneshop.cart.CartService;
+import com.es.phoneshop.cart.DefaultCartService;
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.exceptions.OutOfStockException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,8 +22,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private CartService cartService;
 
-
-
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -29,8 +31,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("product", productDao.getProduct(parseProductId(request)));
+        Long id = parseProductId(request);
+        request.setAttribute("product", productDao.getProduct(id));
         request.setAttribute("cart", cartService.getCart(request));
+        productDao.addToRecent(id, productDao.getRecentProductIds(request));
+        request.setAttribute("recentProducts", productDao.getRecentProducts(3, request));
         request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
 
@@ -39,12 +44,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Long productId = parseProductId(request);
         String quantityString = request.getParameter("quantity");
         int quantity;
-        NumberFormat numberFormat = NumberFormat.getInstance(request.getLocale());
         try {
-            quantity = numberFormat.parse(quantityString).intValue();
+            quantity = getQuantity(quantityString, request);
         } catch (ParseException e) {
             request.setAttribute("error", "Not a number!");
-            doGet(request,response);
+            doGet(request, response);
             return;
         }
         Cart cart = cartService.getCart(request);
@@ -62,4 +66,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private long parseProductId(HttpServletRequest request) {
         return Long.parseLong(request.getPathInfo().substring(1));
     }
+
+    private int getQuantity(String quantityString, HttpServletRequest request) throws ParseException {
+        NumberFormat numberFormat = NumberFormat.getInstance(request.getLocale());
+        return numberFormat.parse(quantityString).intValue();
+    }
+
 }

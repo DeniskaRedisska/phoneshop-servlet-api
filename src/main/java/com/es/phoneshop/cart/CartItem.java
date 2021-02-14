@@ -1,4 +1,6 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.cart;
+
+import com.es.phoneshop.model.product.Product;
 
 public class CartItem {
     private Product product;
@@ -20,7 +22,6 @@ public class CartItem {
     public int getQuantity() {
         return quantity;
     }
-
 
     public void incrementQuantity(int increment){
         quantity+=increment;

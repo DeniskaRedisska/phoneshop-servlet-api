@@ -1,6 +1,6 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.cart;
 
-import com.es.phoneshop.model.product.exceptions.OutOfStockException;
+import com.es.phoneshop.exceptions.OutOfStockException;
 
 import javax.servlet.http.HttpServletRequest;
 

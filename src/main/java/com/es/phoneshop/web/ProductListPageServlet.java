@@ -1,9 +1,9 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.product.SortField;
-import com.es.phoneshop.model.product.SortType;
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.SortField;
+import com.es.phoneshop.dao.SortType;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,6 +31,7 @@ public class ProductListPageServlet extends HttpServlet {
         request.setAttribute("products", productDao.findProducts(query,
                 Optional.ofNullable(sort).map(SortField::valueOf).orElse(null),
                 Optional.ofNullable(order).map(SortType::valueOf).orElse(null)));
+        request.setAttribute("recentProducts",productDao.getRecentProducts(3,request));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 }
