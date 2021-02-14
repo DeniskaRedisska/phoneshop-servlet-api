@@ -27,27 +27,64 @@ public class ArrayListProductDaoTest {
 
     private void setTestData() {
         productDao.save(new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
-        productDao.save(new Product("sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
+        productDao.save(new Product("sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
         productDao.save(new Product("sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg"));
     }
 
     @Test
     public void testFindProducts() {
-        assertFalse(productDao.findProducts().isEmpty());
+        assertFalse(productDao.findProducts(null, null, null).isEmpty());
     }
 
     @Test
+    public void testFindProductsWithQueryAndSorting() {
+        assertEquals(3,
+                productDao.findProducts("Samsung Galaxy", SortField.price, SortType.asc).size());
+        assertEquals(3,
+                productDao.findProducts("Samsung II", SortField.price, SortType.asc).size());
+        assertEquals(2,
+                productDao.findProducts("II", SortField.price, SortType.asc).size());
+        assertEquals(3,
+                productDao.findProducts("Samsung Galaxy S II", SortField.price, SortType.asc).size());
+        assertEquals(3,
+                productDao.findProducts("S", SortField.price, SortType.asc).size());
+    }
+
+    @Test
+    public void testSortingBySearchTerms() {
+        assertEquals("Samsung Galaxy S II",
+                productDao.findProducts("Samsung II", null, null).get(0).getDescription());
+        assertEquals("Samsung Galaxy S II",
+                productDao.findProducts("S II", null, null).get(0).getDescription());
+        assertEquals("Samsung Galaxy S",
+                productDao.findProducts("Samsung S", null, null).get(0).getDescription());
+
+    }
+
+    @Test
+    public void testSortingByFieldsAndType() {
+        assertEquals("Samsung Galaxy S",
+                productDao.findProducts("Samsung S", SortField.price, SortType.asc).get(0).getDescription());
+        assertEquals("Samsung Galaxy S III",
+                productDao.findProducts("Samsung S", SortField.price, SortType.desc).get(0).getDescription());
+        assertEquals("Samsung Galaxy S III",
+                productDao.findProducts("Samsung S", SortField.description, SortType.desc).get(0).getDescription());
+        assertEquals("Samsung Galaxy S",
+                productDao.findProducts("Samsung S", SortField.description, SortType.asc).get(0).getDescription());
+    }
+
+
+    @Test
     public void testFindProductsWithNullPrice() {
-        if (productDao.findProducts().stream()
-                .anyMatch(product -> product.getPrice() == null))
-            fail("Shouldn't contain products with null price");
+        assertFalse(productDao.findProducts(null, null, null).stream()
+                .anyMatch(product -> product.getPrice() == null));
     }
 
     @Test
     public void testFindProductsWithZeroStock() {
-        if (productDao.findProducts().stream()
-                .anyMatch(product -> product.getStock() == 0))
-            fail("Shouldn't contain products with zero stock");
+        assertFalse(productDao.findProducts(null, null, null).stream()
+                .anyMatch(product -> product.getStock() == 0));
+
     }
 
     @Test
