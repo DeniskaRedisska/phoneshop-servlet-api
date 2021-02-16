@@ -67,7 +67,7 @@ public class DefaultRecentProductsService implements RecentProductsService {
         try {
             return recentProductIds.stream()
                     .skip(skipCount)
-
+                    .limit(count)
                     .map(dao::getProduct)
                     .collect(Collectors.toList());
         } finally {
