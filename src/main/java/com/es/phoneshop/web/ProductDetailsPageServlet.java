@@ -2,6 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.dao.impl.ArrayListProductDao;
+import com.es.phoneshop.exceptions.InvalidArgumentException;
 import com.es.phoneshop.exceptions.OutOfStockException;
 import com.es.phoneshop.factory.DataProviderFactory;
 import com.es.phoneshop.model.cart.Cart;
@@ -78,6 +79,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
             cartService.add(cart, productId, quantity);
         } catch (OutOfStockException e) {
             request.setAttribute("error", "Product is out of stock, available: " + e.getQuantityAvailable());
+            doGet(request, response);
+            return;
+        } catch (InvalidArgumentException e) {
+            request.setAttribute("error", e.getMessage());
             doGet(request, response);
             return;
         }
