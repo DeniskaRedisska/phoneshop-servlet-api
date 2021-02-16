@@ -1,5 +1,8 @@
-package com.es.phoneshop.dao;
+package com.es.phoneshop.dao.impl;
 
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortType;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 

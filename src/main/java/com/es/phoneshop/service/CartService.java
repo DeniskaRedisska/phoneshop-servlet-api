@@ -1,11 +1,11 @@
-package com.es.phoneshop.cart;
+package com.es.phoneshop.service;
 
 import com.es.phoneshop.exceptions.OutOfStockException;
-
-import javax.servlet.http.HttpServletRequest;
+import com.es.phoneshop.model.cart.Cart;
 
 public interface CartService {
-    Cart getCart(HttpServletRequest request);
+    Cart getCart(DataProvider<Cart> provider);
 
     void add(Cart cart, Long productId, int quantity) throws OutOfStockException;
+
 }

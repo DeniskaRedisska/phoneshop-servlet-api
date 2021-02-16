@@ -1,16 +1,22 @@
-package com.es.phoneshop.cart;
+package com.es.phoneshop.service.impl;
 
-import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.exceptions.OutOfStockException;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.DataProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.es.phoneshop.utils.VerifyUtil.verifyInStock;
+import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
 public class DefaultCartService implements CartService {
 
@@ -33,15 +39,9 @@ public class DefaultCartService implements CartService {
     }
 
     @Override
-    public Cart getCart(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
-            if (cart == null) {
-                session.setAttribute(CART_SESSION_ATTRIBUTE, cart = new Cart());
-            }
-            return cart;
-        }
+    public Cart getCart(DataProvider<Cart> dataProvider) {
+        verifyNotNull(dataProvider);
+        return dataProvider.getAttribute(CART_SESSION_ATTRIBUTE, new Cart());
     }
 
     @Override
@@ -58,4 +58,5 @@ public class DefaultCartService implements CartService {
                 );
         rwl.writeLock().unlock();
     }
+
 }
