@@ -6,7 +6,9 @@ import com.es.phoneshop.exceptions.OutOfStockException;
 import com.es.phoneshop.factory.DataProviderFactory;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.PropertyService;
 import com.es.phoneshop.service.RecentProductsService;
+import com.es.phoneshop.service.impl.AppPropertyService;
 import com.es.phoneshop.service.impl.DefaultCartService;
 import com.es.phoneshop.service.impl.DefaultRecentProductsService;
 
@@ -21,6 +23,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Deque;
 
+import static com.es.phoneshop.service.impl.AppPropertyService.RECENT_COUNT;
+
 public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductDao productDao;
@@ -29,12 +33,17 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private RecentProductsService recentProductsService;
 
+    private PropertyService propertyService;
+
+
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         this.productDao = ArrayListProductDao.getInstance();
         this.cartService = DefaultCartService.getInstance();
         this.recentProductsService = DefaultRecentProductsService.getInstance();
+        this.propertyService = AppPropertyService.getInstance();
     }
 
     @Override
@@ -43,10 +52,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Long id = parseProductId(request);
         request.setAttribute("product", productDao.getProduct(id));
         request.setAttribute("cart", cartService.getCart(DataProviderFactory.getDataProvider(session)));
-        //productDao.addToRecent(id, productDao.getRecentProductIds(request));
         Deque<Long> recentProductIds = recentProductsService.getRecentProductIds(DataProviderFactory.getDataProvider(session));
         recentProductsService.addToRecent(id, recentProductIds);
-        request.setAttribute("recentProducts", recentProductsService.getRecentProducts(3, recentProductIds));//todo props
+        String count = propertyService.getProperties().getProperty(RECENT_COUNT);
+        request.setAttribute("recentProducts",
+                recentProductsService.getRecentProducts(Integer.parseInt(count), recentProductIds));
         request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
 
