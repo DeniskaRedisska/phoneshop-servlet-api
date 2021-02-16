@@ -20,7 +20,7 @@ public class DefaultCartService implements CartService {
 
     private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
 
-    private final ProductDao productDao;
+    private ProductDao productDao;
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock();
 

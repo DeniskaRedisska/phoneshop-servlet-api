@@ -20,7 +20,7 @@ public class DefaultRecentProductsService implements RecentProductsService {
 
     private static final String RECENT_SESSION_ATTR = DefaultRecentProductsService.class.getName() + ".recentProducts";
 
-    private final ProductDao dao;
+    private ProductDao dao;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock writeLock = readWriteLock.writeLock();
     private final Lock readLock = readWriteLock.readLock();
