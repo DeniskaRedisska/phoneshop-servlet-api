@@ -1,6 +1,5 @@
 package com.es.phoneshop.dao.impl;
 
-import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
 import com.es.phoneshop.exceptions.ProductNotFoundException;

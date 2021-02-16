@@ -4,8 +4,6 @@ import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
 import com.es.phoneshop.model.product.Product;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Deque;
 import java.util.List;
 
 public interface ProductDao {
