@@ -49,20 +49,20 @@ public class DefaultRecentProductsServiceTest {
 
     @Test
     public void testAddSameId() {
-        service.addToRecent(0L,recentIds);
-        service.addToRecent(0L,recentIds);
+        service.addToRecent(0L, recentIds);
+        service.addToRecent(0L, recentIds);
         assertEquals(1, recentIds.size());
     }
 
     @Test
-    public void testGetRecentProducts(){
-        service.addToRecent(1L,recentIds);
-        service.addToRecent(2L,recentIds);
-        service.addToRecent(3L,recentIds);
-        service.addToRecent(4L,recentIds);
-        service.addToRecent(5L,recentIds);
-        service.getRecentProducts(3,recentIds);
-        verify(productDao,never()).getProduct(1L);
+    public void testGetRecentProducts() {
+        service.addToRecent(1L, recentIds);
+        service.addToRecent(2L, recentIds);
+        service.addToRecent(3L, recentIds);
+        service.addToRecent(4L, recentIds);
+        service.addToRecent(5L, recentIds);
+        service.getRecentProducts(3, 1, recentIds);
+        verify(productDao, never()).getProduct(1L);
         verify(productDao, times(3)).getProduct(anyLong());
     }
 

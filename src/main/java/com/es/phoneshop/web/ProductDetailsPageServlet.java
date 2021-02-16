@@ -36,7 +36,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private PropertyService propertyService;
 
+    private final int skipCount = 1;
 
+    private final String SUCCESS_MSG = "Product added to cart";
+
+    private final String OUT_OF_STOCK_MSG = "Product is out of stock, available: ";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -53,12 +57,16 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Long id = parseProductId(request);
         request.setAttribute("product", productDao.getProduct(id));
         request.setAttribute("cart", cartService.getCart(DataProviderFactory.getDataProvider(session)));
+        setRecentProducts(request, session, id);
+        request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+    }
+
+    private void setRecentProducts(HttpServletRequest request, HttpSession session, Long id) {
         Deque<Long> recentProductIds = recentProductsService.getRecentProductIds(DataProviderFactory.getDataProvider(session));
         recentProductsService.addToRecent(id, recentProductIds);
         String count = propertyService.getProperties().getProperty(RECENT_COUNT);
         request.setAttribute("recentProducts",
-                recentProductsService.getRecentProducts(Integer.parseInt(count), recentProductIds));
-        request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+                recentProductsService.getRecentProducts(Integer.parseInt(count), skipCount, recentProductIds));
     }
 
     @Override
@@ -70,23 +78,20 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             quantity = getQuantity(quantityString, request);
         } catch (ParseException e) {
-            request.setAttribute("error", "Not a number!");
-            doGet(request, response);
+            sendErrorMessage(request, response, "Not a number");
             return;
         }
         Cart cart = cartService.getCart(DataProviderFactory.getDataProvider(session));
         try {
             cartService.add(cart, productId, quantity);
         } catch (OutOfStockException e) {
-            request.setAttribute("error", "Product is out of stock, available: " + e.getQuantityAvailable());
-            doGet(request, response);
+            sendErrorMessage(request, response, OUT_OF_STOCK_MSG + e.getQuantityAvailable());
             return;
         } catch (InvalidArgumentException e) {
-            request.setAttribute("error", e.getMessage());
-            doGet(request, response);
+            sendErrorMessage(request, response, e.getMessage());
             return;
         }
-        response.sendRedirect(request.getContextPath() + "/products/" + productId + "?message=Product added to cart");
+        response.sendRedirect(request.getContextPath() + "/products/" + productId + "?message=" + SUCCESS_MSG);
     }
 
 
@@ -97,6 +102,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private int getQuantity(String quantityString, HttpServletRequest request) throws ParseException {
         NumberFormat numberFormat = NumberFormat.getInstance(request.getLocale());
         return numberFormat.parse(quantityString).intValue();
+    }
+
+    private void sendErrorMessage(HttpServletRequest request, HttpServletResponse response, String msg) throws ServletException, IOException {
+        request.setAttribute("error", msg);
+        doGet(request, response);
     }
 
 }

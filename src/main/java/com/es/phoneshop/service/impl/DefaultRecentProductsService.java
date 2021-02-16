@@ -24,7 +24,7 @@ public class DefaultRecentProductsService implements RecentProductsService {
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock writeLock = readWriteLock.writeLock();
     private final Lock readLock = readWriteLock.readLock();
-    private final int skipCount = 1;
+
 
     private DefaultRecentProductsService() {
         dao = ArrayListProductDao.getInstance();
@@ -63,7 +63,7 @@ public class DefaultRecentProductsService implements RecentProductsService {
     }
 
     @Override
-    public List<Product> getRecentProducts(int count, Deque<Long> recentProductIds) {
+    public List<Product> getRecentProducts(int count,int skipCount, Deque<Long> recentProductIds) {
         verifyNotNull(recentProductIds);
         readLock.lock();
         try {

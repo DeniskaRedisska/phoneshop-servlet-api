@@ -30,6 +30,8 @@ public class ProductListPageServlet extends HttpServlet {
 
     private PropertyService propertyService;
 
+    private final int skipCount = 0;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -51,7 +53,7 @@ public class ProductListPageServlet extends HttpServlet {
         Deque<Long> recentProductIds = recentProductsService
                 .getRecentProductIds(DataProviderFactory.getDataProvider(session));
         request.setAttribute("recentProducts",
-                recentProductsService.getRecentProducts(Integer.parseInt(count), recentProductIds));
+                recentProductsService.getRecentProducts(Integer.parseInt(count), skipCount, recentProductIds));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 }

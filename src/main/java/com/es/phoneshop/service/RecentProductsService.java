@@ -9,7 +9,7 @@ public interface RecentProductsService {
 
     void addToRecent(Long id, Deque<Long> recentProductIds);
 
-    List<Product> getRecentProducts(int count, Deque<Long> recentProductIds);
+    List<Product> getRecentProducts(int count, int skipCount, Deque<Long> recentProductIds);
 
     Deque<Long> getRecentProductIds(DataProvider<Deque<Long>> provider);
 

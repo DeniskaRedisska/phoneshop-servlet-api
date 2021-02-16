@@ -12,7 +12,7 @@ public class AppPropertyService implements PropertyService {
     public final static String RECENT_COUNT = "recentCount";
 
     private final Properties properties;
-    private final String propPath = "C:\\Users\\user\\IdeaProjects\\clonedRepo\\phoneshop-servlet-api\\src\\main\\webapp\\WEB-INF\\app.properties";
+    private final String propPath = "./src/main/webapp/WEB-INF/webapp.properties";
 
     private static class Singleton {
         private static final AppPropertyService INSTANCE = new AppPropertyService();
