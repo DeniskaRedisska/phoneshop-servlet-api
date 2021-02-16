@@ -50,5 +50,7 @@
       </tr>
     </c:forEach>
   </table>
-  <tags:recentProducts recentProducts="${recentProducts}"/>
+  <c:if test="${not empty recentProducts}">
+    <tags:recentProducts recentProducts="${recentProducts}"/>
+  </c:if>
 </tags:master>

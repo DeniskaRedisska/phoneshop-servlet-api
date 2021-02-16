@@ -24,9 +24,11 @@
             </div>
         </c:when>
         <c:otherwise>
-            <div class="success">
-                ${param.message}
-            </div>
+            <c:if test="${not empty param.message}">
+                <div class="success">
+                    ${param.message}
+                </div>
+            </c:if>
         </c:otherwise>
     </c:choose>
     </div>
@@ -67,7 +69,9 @@
             <button>Add to cart</button>
         </p>
     </form>
-    <tags:recentProducts recentProducts="${recentProducts}"/>
+    <c:if test="${not empty recentProducts}">
+        <tags:recentProducts recentProducts="${recentProducts}"/>
+    </c:if>
     </body>
 </tags:master>
 
