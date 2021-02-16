@@ -42,6 +42,7 @@ public class DefaultRecentProductsService implements RecentProductsService {
     @Override
     public void addToRecent(Long id, Deque<Long> recentProductIds) {
         verifyNotNull(id);
+        verifyNotNull(recentProductIds);
         writeLock.lock();
         try {
             recentProductIds.stream()
@@ -63,6 +64,7 @@ public class DefaultRecentProductsService implements RecentProductsService {
 
     @Override
     public List<Product> getRecentProducts(int count, Deque<Long> recentProductIds) {
+        verifyNotNull(recentProductIds);
         readLock.lock();
         try {
             return recentProductIds.stream()

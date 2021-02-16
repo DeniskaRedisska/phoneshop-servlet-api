@@ -6,8 +6,6 @@ import com.es.phoneshop.enums.SortType;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -19,7 +17,6 @@ import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
 public class ArrayListProductDao implements ProductDao {
 
-    private static final String RECENT_SESSION_ATTR = ArrayListProductDao.class.getName() + ".recentProducts";
     private final List<Product> products;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();
@@ -138,37 +135,6 @@ public class ArrayListProductDao implements ProductDao {
                         val -> products.set(products.indexOf(val), product),
                         () -> products.add(product)
                 );
-    }
-
-
-    public Deque<Long> getRecentProductIds(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            Deque<Long> recentProductIds = (Deque<Long>) session.getAttribute(RECENT_SESSION_ATTR);
-            if (recentProductIds == null) {
-                session.setAttribute(RECENT_SESSION_ATTR, recentProductIds = new ArrayDeque<>());
-            }
-            return recentProductIds;
-        }
-    }
-
-
-    @Override
-    public List<Product> getRecentProducts(int count, HttpServletRequest request) {
-        Deque<Long> recentProductIds = getRecentProductIds(request);
-        return recentProductIds.stream()
-                .distinct()
-                .limit(count)
-                .map(this::getProduct)
-                .collect(Collectors.toList());
-    }
-
-
-    @Override
-    public void addToRecent(Long id, Deque<Long> recentProductIds) {
-        writeLock.lock();
-        recentProductIds.addFirst(id);
-        writeLock.unlock();
     }
 
     @Override

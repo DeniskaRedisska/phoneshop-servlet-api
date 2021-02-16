@@ -16,10 +16,4 @@ public interface ProductDao {
     void save(Product product);
 
     void delete(Long id);
-
-    void addToRecent(Long id, Deque<Long> recent);
-
-    List<Product> getRecentProducts(int count, HttpServletRequest request);
-
-    Deque<Long> getRecentProductIds(HttpServletRequest request);
 }
