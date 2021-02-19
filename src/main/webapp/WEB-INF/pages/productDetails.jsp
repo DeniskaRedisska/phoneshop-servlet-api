@@ -16,7 +16,6 @@
         Cart: ${cart}
     </p>
 
-    <div>
     <c:choose>
         <c:when test="${not empty error}">
             <div class="error">
@@ -31,7 +30,6 @@
             </c:if>
         </c:otherwise>
     </c:choose>
-    </div>
 
     <form method="post">
     <table>

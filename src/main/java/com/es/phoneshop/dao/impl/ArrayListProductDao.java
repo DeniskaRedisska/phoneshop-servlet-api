@@ -6,6 +6,7 @@ import com.es.phoneshop.enums.SortType;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
-public class ArrayListProductDao implements ProductDao {
+public class ArrayListProductDao implements ProductDao, Serializable {
 
     private final List<Product> products;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
