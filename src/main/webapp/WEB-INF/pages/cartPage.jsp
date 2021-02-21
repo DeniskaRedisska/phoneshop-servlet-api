@@ -33,6 +33,7 @@
                 <td>quantity</td>
             </tr>
             </thead>
+            <c:if test="${empty cart.items}">Cart is empty</c:if>
             <c:forEach var="item" items="${cart.items}" varStatus="status">
                 <tr>
                     <td>
@@ -54,7 +55,7 @@
                     </td>
                     <td>
                         <input name="quantity" class="quantity"
-                               value="${not empty errors ? paramValues.quantity[status.index] : item.quantity}">
+                               value="${not empty errors[item.product.id] ? paramValues.quantity[status.index] : item.quantity}">
                         <input name="productId" type="hidden" value="${item.product.id}">
                         <c:if test="${not empty errors[item.product.id]}">
                             <div class="error">

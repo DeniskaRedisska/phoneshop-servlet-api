@@ -83,14 +83,17 @@ public class DefaultCartService implements CartService {
         verifyNotNull(cart);
         verifyNotNull(productId);
         rwl.writeLock().lock();
-        cart.getItems().removeIf(item -> productId.equals(item.getProduct().getId()));
-        recalculateCart(cart);
-        rwl.writeLock().unlock();
+        try {
+            cart.getItems().removeIf(item -> productId.equals(item.getProduct().getId()));
+            recalculateCart(cart);
+        } finally {
+            rwl.writeLock().unlock();
+        }
     }
 
     private Optional<CartItem> getCartItem(Cart cart, Product product) {
         return cart.getItems().stream()
-                .filter(item -> item.getProduct().getCode().equals(product.getCode()))
+                .filter(item -> item.getProduct().getId().equals(product.getId()))
                 .findAny();
     }
 

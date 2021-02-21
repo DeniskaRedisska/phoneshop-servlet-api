@@ -17,7 +17,7 @@ public class DeleteItemServlet extends HttpServlet {
 
     private CartService cartService;
 
-    private final String SUCCESS_MSG = "Products were successfully updated";
+    private final String SUCCESS_MSG = "Product was deleted successfully";
 
     @Override
     public void init(ServletConfig config) throws ServletException {

@@ -51,7 +51,6 @@ public class CartPageServlet extends HttpServlet {
 
         Cart cart = cartService.getCart(DataProviderFactory.getDataProvider(session));
         Map<Long, String> errors = new HashMap<>();
-        request.setAttribute("errors", errors);
 
         for (int i = 0; i < productIds.length; ++i) {
             Long id = Long.valueOf(productIds[i]);
@@ -60,15 +59,17 @@ public class CartPageServlet extends HttpServlet {
                 cartService.update(cart, id, quantity);
             } catch (InvalidArgumentException | OutOfStockException e) {
                 errors.put(id, e.getMessage());
-                doGet(request, response);
-                return;
             } catch (ParseException e) {
                 errors.put(id, "Not a number");
-                doGet(request, response);
-                return;
             }
         }
-        response.sendRedirect(request.getContextPath() + "/cart" + "?message=" + SUCCESS_MSG);
+        if (errors.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/cart" + "?message=" + SUCCESS_MSG);
+        } else {
+            request.setAttribute("errors", errors);
+            doGet(request, response);
+        }
+
     }
 
     private int getQuantity(String quantityString, HttpServletRequest request) throws ParseException {

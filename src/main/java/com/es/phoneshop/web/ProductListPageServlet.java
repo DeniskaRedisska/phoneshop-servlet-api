@@ -1,13 +1,16 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
 import com.es.phoneshop.factory.DataProviderFactory;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.service.CartService;
 import com.es.phoneshop.service.PropertyService;
 import com.es.phoneshop.service.RecentProductsService;
 import com.es.phoneshop.service.impl.AppPropertyService;
+import com.es.phoneshop.service.impl.DefaultCartService;
 import com.es.phoneshop.service.impl.DefaultRecentProductsService;
 
 import javax.servlet.ServletConfig;
@@ -17,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Deque;
 import java.util.Optional;
 
@@ -30,6 +35,10 @@ public class ProductListPageServlet extends HttpServlet {
 
     private PropertyService propertyService;
 
+    private CartService cartService;
+
+    private final String SUCCESS_MSG = "Product added to cart";
+
     private final int skipCount = 0;
 
     @Override
@@ -38,6 +47,7 @@ public class ProductListPageServlet extends HttpServlet {
         this.productDao = ArrayListProductDao.getInstance();
         this.propertyService = AppPropertyService.getInstance();
         this.recentProductsService = DefaultRecentProductsService.getInstance();
+        this.cartService = DefaultCartService.getInstance();
     }
 
     @Override
@@ -54,6 +64,14 @@ public class ProductListPageServlet extends HttpServlet {
                 .getRecentProductIds(DataProviderFactory.getDataProvider(session));
         request.setAttribute("recentProducts",
                 recentProductsService.getRecentProducts(Integer.parseInt(count), skipCount, recentProductIds));
+        Cart cart = cartService.getCart(DataProviderFactory.getDataProvider(session));
+        request.setAttribute("cart", cart);
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getAttribute("errors") != null)
+            doGet(req, resp);
     }
 }
