@@ -1,7 +1,10 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.dao.impl;
 
-import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
-import com.es.phoneshop.model.product.exceptions.VerificationException;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortType;
+import com.es.phoneshop.exceptions.ProductNotFoundException;
+import com.es.phoneshop.exceptions.VerificationException;
+import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
 

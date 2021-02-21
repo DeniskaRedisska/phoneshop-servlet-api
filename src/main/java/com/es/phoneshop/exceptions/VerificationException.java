@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.product.exceptions;
+package com.es.phoneshop.exceptions;
 
 public class VerificationException extends RuntimeException {
 

@@ -1,14 +1,19 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.dao.impl;
 
-import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.enums.SortField;
+import com.es.phoneshop.enums.SortType;
+import com.es.phoneshop.exceptions.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.es.phoneshop.model.product.VerifyUtil.verifyNotNull;
+import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
 public class ArrayListProductDao implements ProductDao {
 
@@ -44,13 +49,14 @@ public class ArrayListProductDao implements ProductDao {
         readLock.lock();
         try {
             return products.stream()
-                    .filter(product -> id.equals(product.getId()))
+                    .filter(p -> id.equals(p.getId()))
                     .findAny()
                     .orElseThrow(() -> new ProductNotFoundException(id));
         } finally {
             readLock.unlock();
         }
     }
+
 
     @Override
     public List<Product> findProducts(String query, SortField sortField, SortType sortType) {
@@ -80,12 +86,14 @@ public class ArrayListProductDao implements ProductDao {
     private Comparator<Map.Entry<Product, Long>> getSortComparator(SortField field, SortType type) {
         if (field == null || type == null) return this::relevanceSort;
         return Comparator.comparing(
-                product -> {
-                    if (field == SortField.price) return product.getKey().getPrice();
-                    else return product.getKey().getDescription();
-                },
+                keyExtractor(field),
                 getOrderTypeComparator(type)
         );
+    }
+
+    private Function<Map.Entry<Product, Long>, Comparable> keyExtractor(SortField field) {
+        if (field == SortField.price) return product -> product.getKey().getPrice();
+        return product -> product.getKey().getDescription();
     }
 
     private Comparator<Comparable> getOrderTypeComparator(SortType type) {
