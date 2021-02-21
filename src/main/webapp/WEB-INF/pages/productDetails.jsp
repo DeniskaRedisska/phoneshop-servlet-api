@@ -17,7 +17,7 @@
     </p>
 
     <c:choose>
-        <c:when test="${not empty error}">
+        <c:when test="${not empty errors}">
             <div class="error">
                 An error occurred adding product to cart
             </div>
