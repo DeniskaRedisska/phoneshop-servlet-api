@@ -36,9 +36,9 @@ public class DefaultCartServiceTest {
 
     private Currency usd = Currency.getInstance("USD");
 
-    private Product p1 = new Product(0L,"sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
+    private Product p1 = new Product(0L, "sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
 
-    private Product p2 = new Product(2L,"sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg");
+    private Product p2 = new Product(2L, "sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg");
 
     private Cart cart = new Cart();
 
@@ -114,10 +114,20 @@ public class DefaultCartServiceTest {
 
 
     @Test
-    public void testDeleteNonExistingItem(){
+    public void testDeleteNonExistingItem() {
         cart.getItems().add(new CartItem(p1, 5));
         assertEquals(1, cart.getItems().size());
         cartService.delete(cart, 2L);
         assertEquals(1, cart.getItems().size());
+    }
+
+    @Test
+    public void testRecalculateCart() throws InvalidArgumentException, OutOfStockException {
+        cartService.add(cart,0L,1);
+        assertEquals(1, cart.getTotalQuantity());
+        assertEquals(new BigDecimal(100), cart.getTotalPrice());
+        cartService.add(cart,2L,1);
+        assertEquals(2, cart.getTotalQuantity());
+        assertEquals(new BigDecimal(400), cart.getTotalPrice());
     }
 }

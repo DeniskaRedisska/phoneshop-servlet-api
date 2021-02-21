@@ -38,6 +38,17 @@ public class AddToCartServlet extends HttpServlet {
         String quantityString = request.getParameter("quantity");
         String backPath = request.getParameter("backPath");
         Map<Long, String> errors = new HashMap<>();
+        addProduct(request, session, id, quantityString, errors);
+        if (errors.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/" + backPath + "?message=" + SUCCESS_MSG);
+        } else {
+            request.setAttribute("errors", errors);
+            request.getRequestDispatcher("/" + backPath).forward(request, response);
+        }
+    }
+
+    private void addProduct(HttpServletRequest request, HttpSession session, Long id,
+                            String quantityString, Map<Long, String> errors) {
         try {
             int quantity = getQuantity(quantityString, request);
             Cart cart = cartService.getCart(DataProviderFactory.getDataProvider(session));
@@ -46,12 +57,6 @@ public class AddToCartServlet extends HttpServlet {
             errors.put(id, e.getMessage());
         } catch (ParseException e) {
             errors.put(id, "Not a number");
-        }
-        if (errors.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/" + backPath + "?message=" + SUCCESS_MSG);
-        } else {
-            request.setAttribute("errors", errors);
-            request.getRequestDispatcher("/" + backPath).forward(request, response);
         }
     }
 

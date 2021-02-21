@@ -18,8 +18,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class CartPageServlet extends HttpServlet {
     private ProductDao productDao;
@@ -49,27 +49,42 @@ public class CartPageServlet extends HttpServlet {
         String[] quantities = request.getParameterValues("quantity");
         String[] productIds = request.getParameterValues("productId");
 
+        if (quantities.length != productIds.length) {
+            throw new InvalidArgumentException("Different array sizes");
+        }
+
+        List<String> quantityList = Arrays.asList(quantities);
+        List<String> productIdList = Arrays.asList(productIds);
+
+        Iterator<String> quantityIterator = quantityList.iterator();
+        Iterator<String> productIterator = productIdList.iterator();
+
         Cart cart = cartService.getCart(DataProviderFactory.getDataProvider(session));
         Map<Long, String> errors = new HashMap<>();
 
-        for (int i = 0; i < productIds.length; ++i) {
-            Long id = Long.valueOf(productIds[i]);
-            try {
-                int quantity = getQuantity(quantities[i], request);
-                cartService.update(cart, id, quantity);
-            } catch (InvalidArgumentException | OutOfStockException e) {
-                errors.put(id, e.getMessage());
-            } catch (ParseException e) {
-                errors.put(id, "Not a number");
-            }
+        while (quantityIterator.hasNext() && productIterator.hasNext()) {
+            updateCart(quantityIterator, productIterator, cart, request, errors);
         }
+
         if (errors.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/cart" + "?message=" + SUCCESS_MSG);
         } else {
             request.setAttribute("errors", errors);
             doGet(request, response);
         }
+    }
 
+    private void updateCart(Iterator<String> quantityIterator, Iterator<String> productIterator,
+                            Cart cart, HttpServletRequest request, Map<Long, String> errors) {
+        Long id = Long.valueOf(productIterator.next());
+        try {
+            int quantity = getQuantity(quantityIterator.next(), request);
+            cartService.update(cart, id, quantity);
+        } catch (InvalidArgumentException | OutOfStockException e) {
+            errors.put(id, e.getMessage());
+        } catch (ParseException e) {
+            errors.put(id, "Not a number");
+        }
     }
 
     private int getQuantity(String quantityString, HttpServletRequest request) throws ParseException {

@@ -127,9 +127,13 @@ public class DefaultCartService implements CartService {
 
     private void calculateTotalPrice(Cart cart) {
         cart.setTotalPrice(cart.getItems().stream()
-                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add));//todo read about it
+                .map(this::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
 
+    }
+
+    private BigDecimal getPrice(CartItem item) {
+        return item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
     }
 
 }

@@ -77,7 +77,7 @@
                     <td></td>
                     <td> Total Price:
                         <fmt:formatNumber value="${cart.totalPrice}" type="currency"
-                                          currencySymbol="${cart.items.get(0).product.currency.symbol}"/><%--todo solve this--%>
+                                          currencySymbol="${cart.items.get(0).product.currency.symbol}"/>
                     </td>
                     <td>Total Quantity: ${cart.totalQuantity}</td>
                 </tr>
