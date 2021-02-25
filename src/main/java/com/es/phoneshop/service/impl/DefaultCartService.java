@@ -53,12 +53,17 @@ public class DefaultCartService implements CartService {
             if (optional.isPresent()) {
                 setQuantity(product, optional.get(), quantity + optional.get().getQuantity());
             } else {
-                cart.getItems().add(new CartItem(product, quantity));
+                addProduct(cart, quantity, product);
             }
             recalculateCart(cart);
         } finally {
             rwl.writeLock().unlock();
         }
+    }
+
+    private void addProduct(Cart cart, int quantity, Product product) {
+        if (quantity > product.getStock()) throw new InvalidArgumentException("Invalid quantity");
+        cart.getItems().add(new CartItem(product, quantity));
     }
 
 
