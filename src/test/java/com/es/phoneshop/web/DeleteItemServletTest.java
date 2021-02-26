@@ -34,13 +34,14 @@ public class DeleteItemServletTest {
     public void testDeleteItem() throws ServletException, IOException {
         when(request.getSession()).thenReturn(any());
         servlet.doPost(request, response);
-        when(request.getPathInfo().substring(1)).thenReturn("0");
+        when(request.getPathInfo()).thenReturn("/0");
+
         verify(service).delete(any(), any());
     }
 
     @Test
     public void testErrorDeleteItem() throws ServletException, IOException {
-        when(request.getPathInfo().substring(1)).thenReturn("-1");
+        when(request.getPathInfo()).thenReturn("/-1");
         servlet.doPost(request, response);
         verify(service,never()).delete(any(), any());
     }

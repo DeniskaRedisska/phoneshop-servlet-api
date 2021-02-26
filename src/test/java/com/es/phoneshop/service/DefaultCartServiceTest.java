@@ -125,9 +125,9 @@ public class DefaultCartServiceTest {
     public void testRecalculateCart() throws InvalidArgumentException, OutOfStockException {
         cartService.add(cart,0L,1);
         assertEquals(1, cart.getTotalQuantity());
-        assertEquals(new BigDecimal(100), cart.getTotalPrice());
+        assertEquals(new BigDecimal(100), cart.getTotalCost());
         cartService.add(cart,2L,1);
         assertEquals(2, cart.getTotalQuantity());
-        assertEquals(new BigDecimal(400), cart.getTotalPrice());
+        assertEquals(new BigDecimal(400), cart.getTotalCost());
     }
 }

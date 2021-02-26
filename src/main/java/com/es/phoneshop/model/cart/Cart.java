@@ -6,10 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart implements Serializable {
-    private final List<CartItem> items;
-
+    private List<CartItem> items;
 
     private int totalQuantity;
+
+    private BigDecimal totalCost;
+
+    public Cart() {
+        items = new ArrayList<>();
+    }
 
     public int getTotalQuantity() {
         return totalQuantity;
@@ -19,22 +24,21 @@ public class Cart implements Serializable {
         this.totalQuantity = totalQuantity;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getTotalCost() {
+        return totalCost;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
     }
 
-    private BigDecimal totalPrice;
-
-    public Cart() {
-        items = new ArrayList<>();
-    }
 
     public List<CartItem> getItems() {
         return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
     }
 
     public String toString(){

@@ -24,69 +24,89 @@
         <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>ExceptionHandler</servlet-name>
-        <servlet-class>com.es.phoneshop.web.ExceptionHandlerServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>productDetails</servlet-name>
-        <servlet-class>com.es.phoneshop.web.ProductDetailsPageServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>cartPage</servlet-name>
-        <servlet-class>com.es.phoneshop.web.CartPageServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>deleteCartItem</servlet-name>
-        <servlet-class>com.es.phoneshop.web.DeleteItemServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>miniCart</servlet-name>
-        <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>addToCart</servlet-name>
-        <servlet-class>com.es.phoneshop.web.AddToCartServlet</servlet-class>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>productList</servlet-name>
         <url-pattern>/products</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ExceptionHandler</servlet-name>
+        <servlet-class>com.es.phoneshop.web.ExceptionHandlerServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>ExceptionHandler</servlet-name>
         <url-pattern>/ExceptionHandler</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>productDetails</servlet-name>
+        <servlet-class>com.es.phoneshop.web.ProductDetailsPageServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>productDetails</servlet-name>
         <url-pattern>/products/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>cartPage</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CartPageServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>cartPage</servlet-name>
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>deleteCartItem</servlet-name>
+        <servlet-class>com.es.phoneshop.web.DeleteItemServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>deleteCartItem</servlet-name>
         <url-pattern>/cart/deleteCartItem/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>miniCart</servlet-name>
+        <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>miniCart</servlet-name>
         <url-pattern>/cart/miniCart</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>addToCart</servlet-name>
+        <servlet-class>com.es.phoneshop.web.AddToCartServlet</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>addToCart</servlet-name>
         <url-pattern>/products/addToCart/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>checkOut</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CheckoutPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>checkOut</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>overview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.OverviewPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>overview</servlet-name>
+        <url-pattern>/order/overview</url-pattern>
     </servlet-mapping>
 
     <error-page>

@@ -131,7 +131,7 @@ public class DefaultCartService implements CartService {
     }
 
     private void calculateTotalPrice(Cart cart) {
-        cart.setTotalPrice(cart.getItems().stream()
+        cart.setTotalCost(cart.getItems().stream()
                 .map(this::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 
