@@ -69,18 +69,20 @@ public class CheckoutPageServlet extends HttpServlet {
                 (s -> order.setPaymentMethod(PaymentMethod.valueOf(s))), ValidationUtil.getPaymentMethodPredicate());
 
 
-        handleError(request, response, errors, order);
+        handleError(request, response, errors, order, cart);
     }
 
     private void handleError(HttpServletRequest request, HttpServletResponse response,
-                             Map<String, String> errors, Order order)
+                             Map<String, String> errors, Order order, Cart cart)
             throws IOException, ServletException {
         if (errors.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/overview");
+            orderService.placeOrder(order);
+            cartService.clearCart(cart);
+            response.sendRedirect(request.getContextPath() + "/order/overview/" + order.getSecureId());
         } else {
             request.setAttribute("errors", errors);
             request.setAttribute("order", order);
-            doGet(request, response);
+            doGet(request, response);//todo think about it
         }
     }
 

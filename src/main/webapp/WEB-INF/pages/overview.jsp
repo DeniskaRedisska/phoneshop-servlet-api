@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="order" type="com.es.phoneshop.model.order.Order" scope="request"/>
-<jsp:useBean id="paymentMethods" scope="request" type="java.util.List"/>
 <tags:master pageTitle="Product List">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/popup.css">
     <head>
@@ -35,8 +34,8 @@
                 </td>
             </tr>
             </thead>
-            <c:if test="${empty cart.items}">Cart is empty</c:if>
-            <c:forEach var="item" items="${cart.items}" varStatus="status">
+            <c:if test="${empty order.items}">Cart is empty</c:if>
+            <c:forEach var="item" items="${order.items}" varStatus="status">
                 <tr>
                     <td>
                         <img class="product-tile" src=${item.product.imageUrl}>
@@ -60,14 +59,14 @@
                     </td>
                 </tr>
             </c:forEach>
-            <c:if test="${not empty cart.items}">
+            <c:if test="${not empty order.items}">
                 <tr>
                     <td></td>
                     <td></td>
-                    <td>Total Quantity: ${cart.totalQuantity}</td>
+                    <td>Total Quantity: ${order.totalQuantity}</td>
                     <td> Subtotal:
-                        <fmt:formatNumber value="${cart.totalCost}" type="currency"
-                                          currencySymbol="${cart.items.get(0).product.currency.symbol}"/>
+                        <fmt:formatNumber value="${order.totalCost}" type="currency"
+                                          currencySymbol="${order.items.get(0).product.currency.symbol}"/>
                         Delivery Cost:
                     </td>
                     <td>Total cost:</td>
@@ -76,10 +75,6 @@
         </table>
         <h2>Your Details</h2>
             <table>
-                <tr>
-                    <td>First name</td>
-                    <td>${order.firstName}</td>
-                </tr>
                 <tr>
                     <td>First name</td>
                     <td>${order.firstName}</td>

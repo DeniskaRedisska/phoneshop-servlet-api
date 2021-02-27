@@ -106,7 +106,7 @@
                 </tr>
             </table>
         <p>
-            <button>Buy</button>
+            <button>Order overview</button>
         </p>
     </form>
     </body>
