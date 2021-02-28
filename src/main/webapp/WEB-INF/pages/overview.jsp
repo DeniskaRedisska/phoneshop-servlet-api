@@ -9,18 +9,6 @@
         <title>Title</title>
     </head>
     <body>
-        <%--    todo include this part--%>
-    <c:if test="${not empty param.message}">
-        <div class="success">
-                ${param.message}
-        </div>
-    </c:if>
-    <c:if test="${not empty errors}">
-        <div class="error">
-            Problem occurred updating a cart
-        </div>
-    </c:if>
-    <form method="post" action="${pageContext.request.contextPath}/checkout">
         <table>
             <thead>
             <tr>
@@ -34,7 +22,6 @@
                 </td>
             </tr>
             </thead>
-            <c:if test="${empty order.items}">Cart is empty</c:if>
             <c:forEach var="item" items="${order.items}" varStatus="status">
                 <tr>
                     <td>
@@ -64,12 +51,22 @@
                     <td></td>
                     <td></td>
                     <td>Total Quantity: ${order.totalQuantity}</td>
-                    <td> Subtotal:
-                        <fmt:formatNumber value="${order.totalCost}" type="currency"
-                                          currencySymbol="${order.items.get(0).product.currency.symbol}"/>
-                        Delivery Cost:
+                    <td> Subtotal: <tags:price order="${order}" paramName="subTotal"/>
                     </td>
-                    <td>Total cost:</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Delivery cost: <tags:price order="${order}" paramName="deliveryCost"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total cost: <tags:price order="${order}" paramName="totalCost"/>
+                    </td>
                 </tr>
             </c:if>
         </table>
@@ -100,9 +97,5 @@
                     <td>${order.paymentMethod}</td>
                 </tr>
             </table>
-        <p>
-            <button>Buy</button>
-        </p>
-    </form>
     </body>
 </tags:master>

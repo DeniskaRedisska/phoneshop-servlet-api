@@ -1,13 +1,13 @@
 package com.es.phoneshop.model.order;
 
-import com.es.phoneshop.dao.DataObject;
+import com.es.phoneshop.dao.ObjectWithUniqueId;
 import com.es.phoneshop.enums.PaymentMethod;
 import com.es.phoneshop.model.cart.Cart;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Order extends Cart implements DataObject {
+public class Order extends Cart implements ObjectWithUniqueId {
 
     private Long id;
     private String secureId;
@@ -23,7 +23,6 @@ public class Order extends Cart implements DataObject {
     private String deliveryAddress;
 
     private PaymentMethod paymentMethod;
-
 
 
     public BigDecimal getDeliveryCost() {

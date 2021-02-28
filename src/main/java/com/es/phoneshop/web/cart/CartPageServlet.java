@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.cart;
 
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.dao.impl.ArrayListProductDao;
@@ -27,6 +27,8 @@ public class CartPageServlet extends HttpServlet {
     private CartService cartService;
 
     private final String SUCCESS_MSG = "Products were successfully updated";
+
+    private final String ERROR_MSG = "Error occurred updating cart";
 
 
     @Override
@@ -70,6 +72,7 @@ public class CartPageServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/cart" + "?message=" + SUCCESS_MSG);
         } else {
             request.setAttribute("errors", errors);
+            request.setAttribute("errorMsg", ERROR_MSG);
             doGet(request, response);
         }
     }

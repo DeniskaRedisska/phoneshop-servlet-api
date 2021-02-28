@@ -13,7 +13,7 @@ public class ValidationUtil {
     }
 
     public static Predicate<String> getPhonePredicate() {
-        Pattern pattern = Pattern.compile("((\\+375)|(80))(\\d{9})");//BY phone number
+        Pattern pattern = Pattern.compile("((\\+375)|(80))(\\d{9})$");//BY phone number
         return getDefaultParamPredicate().and(pattern.asPredicate());
     }
 

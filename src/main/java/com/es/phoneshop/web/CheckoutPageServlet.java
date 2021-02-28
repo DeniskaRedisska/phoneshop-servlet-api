@@ -31,6 +31,14 @@ public class CheckoutPageServlet extends HttpServlet {
 
     private final String CHECKOUT_JSP = "/WEB-INF/pages/checkout.jsp";
 
+    private final String ERROR_MSG = "Error occurred with your details";
+
+    private final String SUCCESS_MSG = "Your order was successfully placed";
+
+    protected void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -78,19 +86,21 @@ public class CheckoutPageServlet extends HttpServlet {
         if (errors.isEmpty()) {
             orderService.placeOrder(order);
             cartService.clearCart(cart);
-            response.sendRedirect(request.getContextPath() + "/order/overview/" + order.getSecureId());
+            response.sendRedirect(request.getContextPath() + "/order/overview/"
+                    + order.getSecureId() + "?message=" + SUCCESS_MSG);
         } else {
             request.setAttribute("errors", errors);
             request.setAttribute("order", order);
+            request.setAttribute("errorMsg", ERROR_MSG);
             doGet(request, response);//todo think about it
         }
     }
 
 
     private void setRequestParam(HttpServletRequest request, String paramName, Map<String, String> errors,
-                                 Consumer<String> consumer, Predicate<String> predicate) {
+                                 Consumer<String> consumer, Predicate<String> validationPredicate) {
         String parameter = request.getParameter(paramName);
-        if (predicate.test(parameter)) {
+        if (validationPredicate.test(parameter)) {
             consumer.accept(parameter);
         } else {
             errors.put(paramName, "Invalid input");

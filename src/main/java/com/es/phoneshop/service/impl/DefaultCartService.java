@@ -61,8 +61,8 @@ public class DefaultCartService implements CartService {
         }
     }
 
-    private void addProduct(Cart cart, int quantity, Product product) {
-        if (quantity > product.getStock()) throw new InvalidArgumentException("Invalid quantity");
+    private void addProduct(Cart cart, int quantity, Product product) throws OutOfStockException {
+        if (quantity > product.getStock()) throw new OutOfStockException(product.getStock());
         cart.getItems().add(new CartItem(product, quantity));
     }
 
@@ -120,7 +120,8 @@ public class DefaultCartService implements CartService {
     }
 
     private void verifyIsInStock(Product product, CartItem item, int quantity) throws OutOfStockException {
-        if (product.getStock() < item.getQuantity() + quantity)
+        if (product.getStock() < quantity ||
+                product.getStock() < item.getQuantity() + quantity)
             throw new OutOfStockException(product.getStock() - item.getQuantity());
     }
 

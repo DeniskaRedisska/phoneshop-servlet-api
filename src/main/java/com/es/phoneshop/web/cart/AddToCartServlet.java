@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.cart;
 
 import com.es.phoneshop.exceptions.InvalidArgumentException;
 import com.es.phoneshop.exceptions.OutOfStockException;
@@ -25,6 +25,8 @@ public class AddToCartServlet extends HttpServlet {
 
     private final String SUCCESS_MSG = "Product added to cart";
 
+    private final String ERROR_MSG = "Error occurred adding product to cart";
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -43,6 +45,7 @@ public class AddToCartServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/" + backPath + "?message=" + SUCCESS_MSG);
         } else {
             request.setAttribute("errors", errors);
+            request.setAttribute("errorMsg", ERROR_MSG);
             request.getRequestDispatcher("/" + backPath).forward(request, response);
         }
     }

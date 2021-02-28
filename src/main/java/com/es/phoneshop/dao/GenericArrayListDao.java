@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
-public abstract class GenericDao<T extends DataObject> {
+public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> {
 
     protected List<T> items;
 
@@ -22,7 +22,7 @@ public abstract class GenericDao<T extends DataObject> {
         return maxId;
     }
 
-    public GenericDao(List<T> list) {
+    public GenericArrayListDao(List<T> list) {
         items = list;
     }
 
@@ -52,7 +52,7 @@ public abstract class GenericDao<T extends DataObject> {
                 .ifPresentOrElse(
                         val -> items.set(items.indexOf(val), value),
                         () -> items.add(value)
-                );
+               );
     }
 
 
@@ -68,4 +68,15 @@ public abstract class GenericDao<T extends DataObject> {
             readLock.unlock();
         }
     }
+
+    public void delete(Long id) {
+        verifyNotNull(id);
+        writeLock.lock();
+        try {
+            items.removeIf(product -> id.equals(product.getId()));
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
 }

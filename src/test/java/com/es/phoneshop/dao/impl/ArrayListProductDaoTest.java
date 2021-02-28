@@ -2,6 +2,7 @@ package com.es.phoneshop.dao.impl;
 
 import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
+import com.es.phoneshop.exceptions.ItemNotFoundException;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.exceptions.VerificationException;
 import com.es.phoneshop.model.product.Product;
@@ -29,9 +30,9 @@ public class ArrayListProductDaoTest {
     }
 
     private void setTestData() {
-        productDao.save(new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
-        productDao.save(new Product("sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
-        productDao.save(new Product("sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg"));
+        productDao.saveProduct(new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
+        productDao.saveProduct(new Product("sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
+        productDao.saveProduct(new Product("sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg"));
     }
 
     @Test
@@ -93,7 +94,7 @@ public class ArrayListProductDaoTest {
     @Test
     public void testSaveProduct() {
         Product product = new Product("new", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
-        productDao.save(product);
+        productDao.saveProduct(product);
         assertNotNull(product.getId());
         try {
             assertEquals(product, productDao.getProduct(product.getId()));
@@ -108,7 +109,7 @@ public class ArrayListProductDaoTest {
         try {
             Product product = productDao.getProduct(0L);
             assertEquals("sgs", product.getCode());
-            productDao.save((new Product(0L, "updated", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg")));
+            productDao.saveProduct((new Product(0L, "updated", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg")));
             product = productDao.getProduct(0L);
             assertEquals("updated", product.getCode());
         } catch (Exception e) {
@@ -120,7 +121,7 @@ public class ArrayListProductDaoTest {
     public void testTrySaveNull() {
         assertThrows(
                 VerificationException.class,
-                () -> productDao.save(null)
+                () -> productDao.saveProduct(null)
         );
     }
 
@@ -128,7 +129,7 @@ public class ArrayListProductDaoTest {
     public void testSaveProductWithExistingUniqueId() {
         long id = productDao.getMaxId() + 5L;
         Product product = new Product(id, "new", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
-        productDao.save(product);
+        productDao.saveProduct(product);
         try {
             Product savedProduct = productDao.getProduct(id);
             assertEquals(product, savedProduct);
@@ -146,7 +147,7 @@ public class ArrayListProductDaoTest {
         } catch (Exception e) {
             fail("Unexpected exception in getProduct method");
         }
-        productDao.delete(2L);
+        productDao.deleteProduct(2L);
         assertThrows(
                 ProductNotFoundException.class,
                 () -> productDao.getProduct(2L)
@@ -161,7 +162,7 @@ public class ArrayListProductDaoTest {
                 () -> productDao.getProduct(id)
         );
         try {
-            productDao.delete(id);
+            productDao.deleteProduct(id);
         } catch (Exception e) {
             fail("Unexpected exception");
         }
@@ -172,7 +173,7 @@ public class ArrayListProductDaoTest {
     public void testDeleteNull() {
         assertThrows(
                 VerificationException.class,
-                () -> productDao.delete(null)
+                () -> productDao.deleteProduct(null)
         );
     }
 

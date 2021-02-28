@@ -16,7 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Currency;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -74,6 +77,19 @@ public class DefaultCartServiceTest {
     }
 
     @Test
+    public void testAddToCartHugeAmount() throws OutOfStockException, ParseException {
+        int quantity = Integer.MAX_VALUE;
+        assertThrows(OutOfStockException.class, () -> cartService.add(cart, 2L, quantity));
+    }
+
+    @Test
+    public void testUpdateCartWithHugeAmount() throws OutOfStockException, ParseException {
+        int quantity = Integer.MAX_VALUE;
+        cartService.add(cart, 2L, 1);
+        assertThrows(OutOfStockException.class, () -> cartService.update(cart, 2L, quantity));
+    }
+
+    @Test
     public void testOutOfStock() throws InvalidArgumentException, OutOfStockException {
         cartService.add(cart, 0L, 50);
         assertThrows(OutOfStockException.class, () -> cartService.add(cart, 0L, 60));
@@ -123,10 +139,10 @@ public class DefaultCartServiceTest {
 
     @Test
     public void testRecalculateCart() throws InvalidArgumentException, OutOfStockException {
-        cartService.add(cart,0L,1);
+        cartService.add(cart, 0L, 1);
         assertEquals(1, cart.getTotalQuantity());
         assertEquals(new BigDecimal(100), cart.getTotalCost());
-        cartService.add(cart,2L,1);
+        cartService.add(cart, 2L, 1);
         assertEquals(2, cart.getTotalQuantity());
         assertEquals(new BigDecimal(400), cart.getTotalCost());
     }

@@ -2,16 +2,18 @@ package com.es.phoneshop.dao;
 
 import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
+import com.es.phoneshop.exceptions.ItemNotFoundException;
+import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
 
 public interface ProductDao {
-    Product getProduct(Long id);
+    Product getProduct(Long id) throws ProductNotFoundException;
 
     List<Product> findProducts(String query, SortField sortField, SortType sortType);
 
-    void save(Product product);
+    void saveProduct(Product product);
 
-    void delete(Long id);
+    void deleteProduct(Long id);
 }

@@ -9,16 +9,8 @@
         <title>Title</title>
     </head>
     <body>
-    <c:if test="${not empty param.message}">
-        <div class="success">
-                ${param.message}
-        </div>
-    </c:if>
-    <c:if test="${not empty errors}">
-        <div class="error">
-            Problem occurred updating a cart
-        </div>
-    </c:if>
+    <c:if test="${empty cart.items}"><h2>Cart is empty</h2></c:if>
+    <c:if test="${not empty cart.items}">
     <form method="post" action="${pageContext.request.contextPath}/cart">
         <table>
             <thead>
@@ -33,7 +25,6 @@
                 <td>quantity</td>
             </tr>
             </thead>
-            <c:if test="${empty cart.items}">Cart is empty</c:if>
             <c:forEach var="item" items="${cart.items}" varStatus="status">
                 <tr>
                     <td>
@@ -93,5 +84,6 @@
             <button formaction="${pageContext.request.contextPath}/checkout">Checkout</button>
         </p>
     </form>
+    </c:if>
     </body>
 </tags:master>

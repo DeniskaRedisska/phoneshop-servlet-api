@@ -1,12 +1,11 @@
 package com.es.phoneshop.dao.impl;
 
-import com.es.phoneshop.dao.GenericDao;
+import com.es.phoneshop.dao.GenericArrayListDao;
 import com.es.phoneshop.dao.OrderDao;
 import com.es.phoneshop.exceptions.ItemNotFoundException;
 import com.es.phoneshop.exceptions.OrderNotFoundException;
 import com.es.phoneshop.model.order.Order;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -15,7 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
-public class ArrayListOrderDao extends GenericDao<Order> implements OrderDao, Serializable {
+public class ArrayListOrderDao extends GenericArrayListDao<Order> implements OrderDao {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();
@@ -39,8 +38,13 @@ public class ArrayListOrderDao extends GenericDao<Order> implements OrderDao, Se
 
 
     @Override
-    public Order getOrder(Long id) throws ItemNotFoundException {
-        return get(id);
+    public Order getOrder(Long id) {
+        try{
+            return get(id);
+        }catch (ItemNotFoundException e){
+            throw new OrderNotFoundException();
+        }
+
     }
 
     @Override

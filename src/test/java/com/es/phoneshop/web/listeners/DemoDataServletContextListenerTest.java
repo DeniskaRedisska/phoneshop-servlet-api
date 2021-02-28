@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.listeners;
 
 import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
@@ -51,7 +51,7 @@ public class DemoDataServletContextListenerTest {
     public void testInsertDemoData() {
         when((servletContext.getInitParameter(anyString()))).thenReturn("true");
         listener.contextInitialized(servletContextEvent);
-        verify(productDao, atLeastOnce()).save(any());
+        verify(productDao, atLeastOnce()).saveProduct(any());
     }
 
     @Test

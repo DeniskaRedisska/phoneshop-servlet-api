@@ -1,6 +1,6 @@
 package com.es.phoneshop.dao;
 
-public interface DataObject {
+public interface ObjectWithUniqueId {
     void setId(Long id);
     Long getId();
 }

@@ -10,17 +10,6 @@
         <title>Title</title>
     </head>
     <body>
-        <%--    todo include this part--%>
-    <c:if test="${not empty param.message}">
-        <div class="success">
-                ${param.message}
-        </div>
-    </c:if>
-    <c:if test="${not empty errors}">
-        <div class="error">
-            Problem occurred updating a cart
-        </div>
-    </c:if>
     <form method="post" action="${pageContext.request.contextPath}/checkout">
         <table>
             <thead>
@@ -48,14 +37,6 @@
                     </td>
                     <td>
                             ${item.quantity}
-                            <%--                        <input name="quantity" class="quantity"--%>
-                            <%--                               value="${not empty errors[item.product.id] ? paramValues.quantity[status.index] : item.quantity}">--%>
-                            <%--                        <input name="productId" type="hidden" value="${item.product.id}">--%>
-                            <%--                        <c:if test="${not empty errors[item.product.id]}">--%>
-                            <%--                            <div class="error">--%>
-                            <%--                                    ${errors[item.product.id]}--%>
-                            <%--                            </div>--%>
-                            <%--                        </c:if>--%>
                     </td>
                     <td class="price">
                         <a href="#popup${item.product.id}">
@@ -68,17 +49,27 @@
                     </td>
                 </tr>
             </c:forEach>
-            <c:if test="${not empty cart.items}">
+            <c:if test="${not empty order.items}">
                 <tr>
                     <td></td>
                     <td></td>
-                    <td>Total Quantity: ${cart.totalQuantity}</td>
-                    <td> Subtotal:
-                        <fmt:formatNumber value="${cart.totalCost}" type="currency"
-                                          currencySymbol="${cart.items.get(0).product.currency.symbol}"/>
-                        Delivery Cost:
+                    <td>Total Quantity: ${order.totalQuantity}</td>
+                    <td class="price"> Subtotal: <tags:price order="${order}" paramName="subTotal"/>
                     </td>
-                    <td>Total cost:</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="price">Delivery cost: <tags:price order="${order}" paramName="deliveryCost"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="price">Total cost: <tags:price order="${order}" paramName="totalCost"/>
+                    </td>
                 </tr>
             </c:if>
         </table>
@@ -91,7 +82,7 @@
                 <tags:setParameter paramName="deliveryAddress" order="${order}" label="Delivery address" errors="${errors}"/>
                 <tr>
                     <td>
-                        Payment method
+                        Payment method<span style="color: red">*</span>
                     </td>
                     <td>
                         <select name="paymentMethod" >
@@ -102,11 +93,16 @@
                                 </option>
                             </c:forEach>
                         </select>
+                        <c:if test="${not empty errors['paymentMethod']}">
+                            <div class="error">
+                                    ${errors['paymentMethod']}
+                            </div>
+                        </c:if>
                     </td>
                 </tr>
             </table>
         <p>
-            <button>Order overview</button>
+            <button>Place order</button>
         </p>
     </form>
     </body>

@@ -1,6 +1,7 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.cart;
 
 import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.web.cart.DeleteItemServlet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
