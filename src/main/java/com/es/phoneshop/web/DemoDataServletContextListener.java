@@ -7,13 +7,14 @@ import com.es.phoneshop.dao.ProductDao;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Currency;
 
-public class DemoDataServletContextListener implements ServletContextListener {
+public class DemoDataServletContextListener implements ServletContextListener, Serializable {
 
     private ProductDao productDao;
 
@@ -55,29 +56,29 @@ public class DemoDataServletContextListener implements ServletContextListener {
 
     private void setPriceHistory() {
         productDao.getProduct(0L).setPriceHistory(new ArrayList<>() {{
-            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12,0,0).toLocalDate(), new BigDecimal(80)));
-            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9,0,0).toLocalDate(), new BigDecimal(90)));
-            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2,0,0).toLocalDate(), new BigDecimal(100)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12, 0, 0).toLocalDate(), new BigDecimal(80)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9, 0, 0).toLocalDate(), new BigDecimal(90)));
+            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2, 0, 0).toLocalDate(), new BigDecimal(100)));
         }});
         productDao.getProduct(2L).setPriceHistory(new ArrayList<>() {{
-            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12,0,0).toLocalDate(), new BigDecimal(250)));
-            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9,0,0).toLocalDate(), new BigDecimal(280)));
-            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2,0,0).toLocalDate(), new BigDecimal(300)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12, 0, 0).toLocalDate(), new BigDecimal(250)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9, 0, 0).toLocalDate(), new BigDecimal(280)));
+            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2, 0, 0).toLocalDate(), new BigDecimal(300)));
         }});
         productDao.getProduct(3L).setPriceHistory(new ArrayList<>() {{
-            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12,0,0).toLocalDate(), new BigDecimal(100)));
-            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9,0,0).toLocalDate(), new BigDecimal(150)));
-            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2,0,0).toLocalDate(), new BigDecimal(200)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12, 0, 0).toLocalDate(), new BigDecimal(100)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9, 0, 0).toLocalDate(), new BigDecimal(150)));
+            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2, 0, 0).toLocalDate(), new BigDecimal(200)));
         }});
         productDao.getProduct(4L).setPriceHistory(new ArrayList<>() {{
-            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12,0,0).toLocalDate(), new BigDecimal(1500)));
-            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9,0,0).toLocalDate(), new BigDecimal(1200)));
-            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2,0,0).toLocalDate(), new BigDecimal(1000)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12, 0, 0).toLocalDate(), new BigDecimal(1500)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9, 0, 0).toLocalDate(), new BigDecimal(1200)));
+            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2, 0, 0).toLocalDate(), new BigDecimal(1000)));
         }});
         productDao.getProduct(5L).setPriceHistory(new ArrayList<>() {{
-            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12,0,0).toLocalDate(), new BigDecimal(400)));
-            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9,0,0).toLocalDate(), new BigDecimal(350)));
-            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2,0,0).toLocalDate(), new BigDecimal(320)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.JUNE, 12, 0, 0).toLocalDate(), new BigDecimal(400)));
+            add(new PriceInfo(LocalDateTime.of(2020, Month.AUGUST, 9, 0, 0).toLocalDate(), new BigDecimal(350)));
+            add(new PriceInfo(LocalDateTime.of(2021, Month.FEBRUARY, 2, 0, 0).toLocalDate(), new BigDecimal(320)));
         }});
     }
 }

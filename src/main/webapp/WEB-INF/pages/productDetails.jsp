@@ -16,9 +16,8 @@
         Cart: ${cart}
     </p>
 
-    <div>
     <c:choose>
-        <c:when test="${not empty error}">
+        <c:when test="${not empty errors}">
             <div class="error">
                 An error occurred adding product to cart
             </div>
@@ -31,9 +30,9 @@
             </c:if>
         </c:otherwise>
     </c:choose>
-    </div>
 
-    <form method="post">
+    <form method="post"
+          action="${pageContext.request.contextPath}/products/addToCart/${product.id}?backPath=products/${product.id}">
     <table>
         <tr>
             <td>Image</td>
@@ -56,10 +55,11 @@
         <tr>
             <td>quantity</td>
             <td>
-                <input name="quantity" class="quantity" value="${not empty error ? param.quantity : 1}">
-                <c:if test="${not empty error}">
+                <input name="quantity" class="quantity" value="${not empty errors ? param.quantity : 1}">
+                <input name="productId" type="hidden" value="${product.id}">
+                <c:if test="${not empty errors}">
                     <div class="error">
-                        ${error}
+                        ${errors[product.id]}
                     </div>
                 </c:if>
             </td>
