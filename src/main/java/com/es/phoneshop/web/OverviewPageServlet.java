@@ -2,7 +2,6 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.dao.OrderDao;
 import com.es.phoneshop.dao.impl.ArrayListOrderDao;
-import com.es.phoneshop.service.impl.DefaultOrderService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

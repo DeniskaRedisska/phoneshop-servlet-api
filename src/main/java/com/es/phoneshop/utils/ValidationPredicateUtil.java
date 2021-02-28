@@ -7,7 +7,7 @@ import java.time.format.DateTimeParseException;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class ValidationUtil {
+public class ValidationPredicateUtil {
     public static Predicate<String> getDefaultParamPredicate() {
         return (s -> s != null && !s.equals(""));
     }

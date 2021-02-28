@@ -8,6 +8,7 @@ import com.es.phoneshop.exceptions.ItemNotFoundException;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -15,7 +16,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ArrayListProductDao extends GenericArrayListDao<Product> implements ProductDao {
+public class ArrayListProductDao extends GenericArrayListDao<Product> implements ProductDao, Serializable {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();

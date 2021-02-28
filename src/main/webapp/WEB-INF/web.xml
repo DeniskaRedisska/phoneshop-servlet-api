@@ -120,13 +120,24 @@
     </filter-mapping>
 
     <error-page>
+        <error-code>429</error-code>
+        <location>/WEB-INF/pages/tooManyRequests.jsp</location>
+    </error-page>
+
+    <error-page>
         <exception-type>com.es.phoneshop.exceptions.ProductNotFoundException</exception-type>
         <location>/WEB-INF/pages/productNotfound.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.es.phoneshop.exceptions.OrderNotFoundException</exception-type>
+        <location>/WEB-INF/pages/orderNotfound.jsp</location>
     </error-page>
 
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/ExceptionHandler</location>
     </error-page>
+
 
 </web-app>

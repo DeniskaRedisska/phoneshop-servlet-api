@@ -19,7 +19,7 @@ import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
 public class DefaultCartService implements CartService {
 
-    private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
+    private static final String CART_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
 
     private ProductDao productDao;
 
@@ -40,7 +40,7 @@ public class DefaultCartService implements CartService {
     @Override
     public Cart getCart(DataProvider<Cart> dataProvider) {
         verifyNotNull(dataProvider);
-        return dataProvider.getAttribute(CART_SESSION_ATTRIBUTE, new Cart());
+        return dataProvider.getAttribute(CART_ATTRIBUTE, new Cart());
     }
 
     @Override

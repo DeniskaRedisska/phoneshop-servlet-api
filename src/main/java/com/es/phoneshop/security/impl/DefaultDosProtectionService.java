@@ -3,17 +3,15 @@ package com.es.phoneshop.security.impl;
 import com.es.phoneshop.security.DosProtectionService;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 public class DefaultDosProtectionService implements DosProtectionService {
     private final int THRESHOLD = 20;
 
-    private final int TIME = 60_000;
-
-    private Map<String, Long> countMap = new ConcurrentHashMap<>();
+    private final Map<String, Long> countMap = new ConcurrentHashMap<>();
 
     private DefaultDosProtectionService() {
-        updateCountMap();
+        setSchedule();
     }
 
     private static class Singleton {
@@ -39,16 +37,9 @@ public class DefaultDosProtectionService implements DosProtectionService {
         return true;
     }
 
-    private void updateCountMap() {
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(TIME);
-                    countMap.clear();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    private void setSchedule() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(countMap::clear, 0L, 1L, TimeUnit.MINUTES);
     }
+
 }

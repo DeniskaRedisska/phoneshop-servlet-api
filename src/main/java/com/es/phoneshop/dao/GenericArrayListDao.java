@@ -2,6 +2,7 @@ package com.es.phoneshop.dao;
 
 import com.es.phoneshop.exceptions.ItemNotFoundException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -9,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
-public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> {
+public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> implements Serializable {
 
     protected List<T> items;
 
@@ -31,21 +32,21 @@ public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> {
         writeLock.lock();
         try {
             if (value.getId() != null) {
-                updateProducts(value);
+                updateItems(value);
             } else {
-                addProduct(value);
+                addItems(value);
             }
         } finally {
             writeLock.unlock();
         }
     }
 
-    private void addProduct(T value) {
+    private void addItems(T value) {
         value.setId(maxId++);
         items.add(value);
     }
 
-    private void updateProducts(T value) {
+    private void updateItems(T value) {
         items.stream()
                 .filter(p -> value.getId().equals(p.getId()))
                 .findAny()

@@ -14,7 +14,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Currency;
 
-public class DemoDataServletContextListener implements ServletContextListener {
+public class DemoDataServletContextListener implements ServletContextListener, Serializable {
 
     private ProductDao productDao;
 

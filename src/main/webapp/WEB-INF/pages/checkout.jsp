@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="order" type="com.es.phoneshop.model.order.Order" scope="request"/>
 <jsp:useBean id="paymentMethods" scope="request" type="java.util.List"/>
-<tags:master pageTitle="Product List">
+<tags:master pageTitle="Checkout">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/popup.css">
     <head>
         <title>Title</title>
@@ -24,8 +24,7 @@
                 </td>
             </tr>
             </thead>
-            <c:if test="${empty cart.items}">Cart is empty</c:if>
-            <c:forEach var="item" items="${cart.items}" varStatus="status">
+            <c:forEach var="item" items="${order.items}" varStatus="status">
                 <tr>
                     <td>
                         <img class="product-tile" src=${item.product.imageUrl}>
@@ -49,7 +48,6 @@
                     </td>
                 </tr>
             </c:forEach>
-            <c:if test="${not empty order.items}">
                 <tr>
                     <td></td>
                     <td></td>
@@ -71,7 +69,6 @@
                     <td class="price">Total cost: <tags:price order="${order}" paramName="totalCost"/>
                     </td>
                 </tr>
-            </c:if>
         </table>
         <h2>Your Details</h2>
             <table>

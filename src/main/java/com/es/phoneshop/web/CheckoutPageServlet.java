@@ -8,7 +8,7 @@ import com.es.phoneshop.service.CartService;
 import com.es.phoneshop.service.OrderService;
 import com.es.phoneshop.service.impl.DefaultCartService;
 import com.es.phoneshop.service.impl.DefaultOrderService;
-import com.es.phoneshop.utils.ValidationUtil;
+import com.es.phoneshop.utils.ValidationPredicateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -64,17 +64,17 @@ public class CheckoutPageServlet extends HttpServlet {
         Map<String, String> errors = new HashMap<>();
 
         setRequestParam(request, "firstName", errors,
-                order::setFirstName, ValidationUtil.getDefaultParamPredicate());
+                order::setFirstName, ValidationPredicateUtil.getDefaultParamPredicate());
         setRequestParam(request, "lastName", errors,
-                order::setLastName, ValidationUtil.getDefaultParamPredicate());
+                order::setLastName, ValidationPredicateUtil.getDefaultParamPredicate());
         setRequestParam(request, "phoneNumber", errors,
-                order::setPhoneNumber, ValidationUtil.getPhonePredicate());
+                order::setPhoneNumber, ValidationPredicateUtil.getPhonePredicate());
         setRequestParam(request, "deliveryAddress", errors,
-                order::setDeliveryAddress, ValidationUtil.getDefaultParamPredicate());
+                order::setDeliveryAddress, ValidationPredicateUtil.getDefaultParamPredicate());
         setRequestParam(request, "deliveryDate", errors,
-                (s -> order.setDeliveryDate(parseDate(s))), ValidationUtil.getDatePredicate());
+                (s -> order.setDeliveryDate(parseDate(s))), ValidationPredicateUtil.getDatePredicate());
         setRequestParam(request, "paymentMethod", errors,
-                (s -> order.setPaymentMethod(PaymentMethod.valueOf(s))), ValidationUtil.getPaymentMethodPredicate());
+                (s -> order.setPaymentMethod(PaymentMethod.valueOf(s))), ValidationPredicateUtil.getPaymentMethodPredicate());
 
 
         handleError(request, response, errors, order, cart);
@@ -92,7 +92,7 @@ public class CheckoutPageServlet extends HttpServlet {
             request.setAttribute("errors", errors);
             request.setAttribute("order", order);
             request.setAttribute("errorMsg", ERROR_MSG);
-            doGet(request, response);//todo think about it
+            doGet(request, response);
         }
     }
 
@@ -113,7 +113,7 @@ public class CheckoutPageServlet extends HttpServlet {
         return cartService.getCart(DataProviderFactory.getDataProvider(session));
     }
 
-    //todo mb parse util
+
     private LocalDate parseDate(String date) {
         return LocalDate.parse(date);
     }

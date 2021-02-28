@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
-<tags:master pageTitle="Product List">
+<tags:master pageTitle="Cart page">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/popup.css">
     <head>
         <title>Title</title>

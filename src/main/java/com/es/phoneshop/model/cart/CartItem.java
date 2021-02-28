@@ -30,10 +30,6 @@ public class CartItem implements Serializable {
         return quantity;
     }
 
-    public void incrementQuantity(int increment) {
-        quantity += increment;
-    }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }

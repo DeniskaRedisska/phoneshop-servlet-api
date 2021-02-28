@@ -19,7 +19,7 @@ public class DosFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (dosProtectionService.isAllowed(servletRequest.getRemoteAddr())) {//todo think about it
+        if (dosProtectionService.isAllowed(servletRequest.getRemoteAddr())) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             ((HttpServletResponse) servletResponse).setStatus(429);

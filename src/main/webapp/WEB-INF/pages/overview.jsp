@@ -3,12 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="order" type="com.es.phoneshop.model.order.Order" scope="request"/>
-<tags:master pageTitle="Product List">
+<tags:master pageTitle="Order overview">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/popup.css">
     <head>
         <title>Title</title>
     </head>
     <body>
+    <h2>Overview</h2>
         <table>
             <thead>
             <tr>
