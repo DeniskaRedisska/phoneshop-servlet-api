@@ -30,9 +30,9 @@ public class ArrayListProductDaoTest {
     }
 
     private void setTestData() {
-        productDao.saveProduct(new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
-        productDao.saveProduct(new Product("sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
-        productDao.saveProduct(new Product("sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg"));
+        productDao.save(new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
+        productDao.save(new Product("sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
+        productDao.save(new Product("sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg"));
     }
 
     @Test
@@ -94,12 +94,12 @@ public class ArrayListProductDaoTest {
     @Test
     public void testSaveProduct() {
         Product product = new Product("new", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
-        productDao.saveProduct(product);
+        productDao.save(product);
         assertNotNull(product.getId());
         try {
-            assertEquals(product, productDao.getProduct(product.getId()));
+            assertEquals(product, productDao.get(product.getId()));
         } catch (Exception e) {
-            fail("Unexpected exception in getProduct method");
+            fail("Unexpected exception in get method");
         }
 
     }
@@ -107,13 +107,13 @@ public class ArrayListProductDaoTest {
     @Test
     public void testUpdateProduct() {
         try {
-            Product product = productDao.getProduct(0L);
+            Product product = productDao.get(0L);
             assertEquals("sgs", product.getCode());
-            productDao.saveProduct((new Product(0L, "updated", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg")));
-            product = productDao.getProduct(0L);
+            productDao.save((new Product(0L, "updated", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg")));
+            product = productDao.get(0L);
             assertEquals("updated", product.getCode());
         } catch (Exception e) {
-            fail("Unexpected exception in getProduct method");
+            fail("Unexpected exception in get method");
         }
     }
 
@@ -121,7 +121,7 @@ public class ArrayListProductDaoTest {
     public void testTrySaveNull() {
         assertThrows(
                 VerificationException.class,
-                () -> productDao.saveProduct(null)
+                () -> productDao.save(null)
         );
     }
 
@@ -129,12 +129,12 @@ public class ArrayListProductDaoTest {
     public void testSaveProductWithExistingUniqueId() {
         long id = productDao.getMaxId() + 5L;
         Product product = new Product(id, "new", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
-        productDao.saveProduct(product);
+        productDao.save(product);
         try {
-            Product savedProduct = productDao.getProduct(id);
+            Product savedProduct = productDao.get(id);
             assertEquals(product, savedProduct);
         } catch (Exception e) {
-            fail("Unexpected exception in getProduct method");
+            fail("Unexpected exception in get method");
         }
 
     }
@@ -142,15 +142,15 @@ public class ArrayListProductDaoTest {
     @Test
     public void testSuccessfulDeleteProduct() {
         try {
-            Product product = productDao.getProduct(2L);
+            Product product = productDao.get(2L);
             assertNotNull(product);
         } catch (Exception e) {
-            fail("Unexpected exception in getProduct method");
+            fail("Unexpected exception in get method");
         }
-        productDao.deleteProduct(2L);
+        productDao.delete(2L);
         assertThrows(
                 ProductNotFoundException.class,
-                () -> productDao.getProduct(2L)
+                () -> productDao.get(2L)
         );
     }
 
@@ -159,10 +159,10 @@ public class ArrayListProductDaoTest {
         long id = productDao.getMaxId() + 10L;
         assertThrows(
                 ProductNotFoundException.class,
-                () -> productDao.getProduct(id)
+                () -> productDao.get(id)
         );
         try {
-            productDao.deleteProduct(id);
+            productDao.delete(id);
         } catch (Exception e) {
             fail("Unexpected exception");
         }
@@ -173,14 +173,14 @@ public class ArrayListProductDaoTest {
     public void testDeleteNull() {
         assertThrows(
                 VerificationException.class,
-                () -> productDao.deleteProduct(null)
+                () -> productDao.delete(null)
         );
     }
 
     @Test
     public void testGetProduct() {
         try {
-            Product product = productDao.getProduct(2L);
+            Product product = productDao.get(2L);
             assertNotNull(product);
         } catch (Exception e) {
             fail("Unexpected exception");
@@ -191,7 +191,7 @@ public class ArrayListProductDaoTest {
     public void testUnsuccessfulGetProduct() {
         assertThrows(
                 ProductNotFoundException.class,
-                () -> productDao.getProduct(productDao.getMaxId() + 5L)
+                () -> productDao.get(productDao.getMaxId() + 5L)
         );
     }
 
@@ -199,7 +199,7 @@ public class ArrayListProductDaoTest {
     public void testGetNull() {
         assertThrows(
                 VerificationException.class,
-                () -> productDao.getProduct(null)
+                () -> productDao.get(null)
         );
     }
 }

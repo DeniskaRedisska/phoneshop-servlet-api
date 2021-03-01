@@ -48,7 +48,7 @@ public class DefaultCartService implements CartService {
         verifyData(cart, productId, quantity);
         rwl.writeLock().lock();
         try {
-            Product product = productDao.getProduct(productId);
+            Product product = productDao.get(productId);
             Optional<CartItem> optional = getCartItem(cart, product);
             if (optional.isPresent()) {
                 setQuantity(product, optional.get(), quantity + optional.get().getQuantity());
@@ -72,7 +72,7 @@ public class DefaultCartService implements CartService {
         verifyData(cart, productId, quantity);
         rwl.writeLock().lock();
         try {
-            Product product = productDao.getProduct(productId);
+            Product product = productDao.get(productId);
             Optional<CartItem> optional = getCartItem(cart, product);
             if (optional.isPresent()) {
                 setQuantity(product, optional.get(), quantity);
@@ -98,8 +98,15 @@ public class DefaultCartService implements CartService {
 
     @Override
     public void clearCart(Cart cart) {
-        cart.getItems().clear();
-        recalculateCart(cart);
+        verifyNotNull(cart);
+        rwl.writeLock().lock();
+        try {
+            cart.getItems().clear();
+            recalculateCart(cart);
+        } finally {
+            rwl.writeLock().unlock();
+        }
+
     }
 
     private Optional<CartItem> getCartItem(Cart cart, Product product) {

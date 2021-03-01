@@ -37,7 +37,7 @@ public class DemoDataServletContextListenerTest {
     @Before
     public void setup() {
         when(servletContextEvent.getServletContext()).thenReturn(servletContext);
-        when(productDao.getProduct(any())).thenReturn(product);
+        when(productDao.get(any())).thenReturn(product);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class DemoDataServletContextListenerTest {
     public void testInsertDemoData() {
         when((servletContext.getInitParameter(anyString()))).thenReturn("true");
         listener.contextInitialized(servletContextEvent);
-        verify(productDao, atLeastOnce()).saveProduct(any());
+        verify(productDao, atLeastOnce()).save(any());
     }
 
     @Test

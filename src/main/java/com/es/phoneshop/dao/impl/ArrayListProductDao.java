@@ -1,6 +1,5 @@
 package com.es.phoneshop.dao.impl;
 
-import com.es.phoneshop.dao.GenericArrayListDao;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
@@ -10,17 +9,10 @@ import com.es.phoneshop.model.product.Product;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ArrayListProductDao extends GenericArrayListDao<Product> implements ProductDao, Serializable {
-
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private final Lock readLock = readWriteLock.readLock();
-    private final Lock writeLock = readWriteLock.writeLock();
+public class ArrayListProductDao extends AbstractGenericArrayListDao<Product> implements ProductDao, Serializable {
 
     private ArrayListProductDao() {
         super(new ArrayList<>());
@@ -38,24 +30,21 @@ public class ArrayListProductDao extends GenericArrayListDao<Product> implements
         return Singleton.INSTANCE;
     }
 
-
     @Override
-    public Product getProduct(Long id) {
+    public Product get(Long id) {
         try {
             return super.get(id);
-        } catch (ItemNotFoundException e) {
+        } catch (ItemNotFoundException exc) {
             throw new ProductNotFoundException(id);
         }
-
     }
-
 
     @Override
     public List<Product> findProducts(String query, SortField sortField, SortType sortType) {
-        readLock.lock();
+        getReadLock().lock();
         try {
             String[] queryWords = (query != null && !query.equals("")) ? query.split("\\s+") : null;
-            return items.stream()
+            return getItems().stream()
                     .filter(product -> product.getStock() > 0)
                     .filter(product -> product.getPrice() != null)
                     .map(product -> Map.entry(product, getNumberOfCollisions(queryWords, product)))
@@ -64,7 +53,7 @@ public class ArrayListProductDao extends GenericArrayListDao<Product> implements
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
         } finally {
-            readLock.unlock();
+            getReadLock().unlock();
         }
     }
 
@@ -97,15 +86,4 @@ public class ArrayListProductDao extends GenericArrayListDao<Product> implements
         return Long.compare(p2.getValue(), p1.getValue());
     }
 
-
-    @Override
-    public void saveProduct(Product product) {
-        super.save(product);
-    }
-
-
-    @Override
-    public void deleteProduct(Long id) {
-        super.delete(id);
-    }
 }

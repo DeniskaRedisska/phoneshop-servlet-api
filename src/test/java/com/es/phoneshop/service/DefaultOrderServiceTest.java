@@ -47,8 +47,8 @@ public class DefaultOrderServiceTest {
 
     @Before
     public void setUp() {
-        when(productDao.getProduct(0L)).thenReturn(p1);
-        when(productDao.getProduct(2L)).thenReturn(p2);
+        when(productDao.get(0L)).thenReturn(p1);
+        when(productDao.get(2L)).thenReturn(p2);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class DefaultOrderServiceTest {
         Order order = orderService.getOrder(cart);
         orderService.placeOrder(order);
         assertNotNull(order.getSecureId());
-        verify(orderDao).saveOrder(order);
+        verify(orderDao).save(order);
     }
 
 }

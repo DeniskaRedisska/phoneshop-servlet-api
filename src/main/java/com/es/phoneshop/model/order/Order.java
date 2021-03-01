@@ -1,13 +1,13 @@
 package com.es.phoneshop.model.order;
 
-import com.es.phoneshop.dao.ObjectWithUniqueId;
+import com.es.phoneshop.model.Item;
 import com.es.phoneshop.enums.PaymentMethod;
 import com.es.phoneshop.model.cart.Cart;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Order extends Cart implements ObjectWithUniqueId {
+public class Order extends Cart implements Item {
 
     private Long id;
     private String secureId;

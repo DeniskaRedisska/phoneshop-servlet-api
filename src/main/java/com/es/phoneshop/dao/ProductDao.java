@@ -8,12 +8,6 @@ import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
 
-public interface ProductDao {
-    Product getProduct(Long id) throws ProductNotFoundException;
-
+public interface ProductDao extends GenericDao<Product> {
     List<Product> findProducts(String query, SortField sortField, SortType sortType);
-
-    void saveProduct(Product product);
-
-    void deleteProduct(Long id);
 }

@@ -1,5 +1,7 @@
-package com.es.phoneshop.dao;
+package com.es.phoneshop.dao.impl;
 
+import com.es.phoneshop.dao.GenericDao;
+import com.es.phoneshop.model.Item;
 import com.es.phoneshop.exceptions.ItemNotFoundException;
 
 import java.io.Serializable;
@@ -10,9 +12,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
-public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> implements Serializable {
+public abstract class AbstractGenericArrayListDao<T extends Item> implements GenericDao<T>,Serializable {
 
-    protected List<T> items;
+    private List<T> items;
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();
@@ -23,11 +25,11 @@ public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> implemen
         return maxId;
     }
 
-    public GenericArrayListDao(List<T> list) {
+    public AbstractGenericArrayListDao(List<T> list) {
         items = list;
     }
 
-    protected void save(T value) {
+    public void save(T value) {
         verifyNotNull(value);
         writeLock.lock();
         try {
@@ -57,7 +59,7 @@ public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> implemen
     }
 
 
-    protected T get(Long id) throws ItemNotFoundException {
+    public T get(Long id) throws ItemNotFoundException {
         verifyNotNull(id);
         readLock.lock();
         try {
@@ -74,10 +76,21 @@ public abstract class GenericArrayListDao<T extends ObjectWithUniqueId> implemen
         verifyNotNull(id);
         writeLock.lock();
         try {
-            items.removeIf(product -> id.equals(product.getId()));
+            items.removeIf(item -> id.equals(item.getId()));
         } finally {
             writeLock.unlock();
         }
     }
 
+    public List<T> getItems() {
+        return items;
+    }
+
+    public Lock getWriteLock() {
+        return writeLock;
+    }
+
+    public Lock getReadLock() {
+        return readLock;
+    }
 }

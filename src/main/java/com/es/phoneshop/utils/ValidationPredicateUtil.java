@@ -19,12 +19,14 @@ public class ValidationPredicateUtil {
 
     public static Predicate<String> getDatePredicate() {
         return getDefaultParamPredicate().and(s -> {
+            LocalDate parse;
             try {
-                LocalDate.parse(s);
+                parse = LocalDate.parse(s);
+                parse.isBefore(LocalDate.now());
             } catch (DateTimeParseException e) {
                 return false;
             }
-            return true;
+            return parse.isEqual(LocalDate.now()) || parse.isAfter(LocalDate.now());
         });
     }
 

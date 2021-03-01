@@ -26,7 +26,7 @@ public class ArrayListOrderDaoTest {
         Order order = new Order();
         String secureId = UUID.randomUUID().toString();
         order.setSecureId(secureId);
-        orderDao.saveOrder(order);
+        orderDao.save(order);
         assertNotNull(orderDao.getOrderBySecureId(secureId));
     }
 

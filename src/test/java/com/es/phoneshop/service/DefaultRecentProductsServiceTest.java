@@ -37,7 +37,7 @@ public class DefaultRecentProductsServiceTest {
 
     @Before
     public void setUp() {
-        when(productDao.getProduct(anyLong())).thenReturn(p1);
+        when(productDao.get(anyLong())).thenReturn(p1);
     }
 
     @Test
@@ -62,8 +62,8 @@ public class DefaultRecentProductsServiceTest {
         service.addToRecent(4L, recentIds);
         service.addToRecent(5L, recentIds);
         service.getRecentProducts(3, 1, recentIds);
-        verify(productDao, never()).getProduct(1L);
-        verify(productDao, times(3)).getProduct(anyLong());
+        verify(productDao, never()).get(1L);
+        verify(productDao, times(3)).get(anyLong());
     }
 
 }

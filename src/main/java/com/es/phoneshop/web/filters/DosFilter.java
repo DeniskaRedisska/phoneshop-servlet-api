@@ -12,6 +12,8 @@ public class DosFilter implements Filter {
 
     private DosProtectionService dosProtectionService;
 
+    private final int TOO_MANY_REQUESTS = 429;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         dosProtectionService = DefaultDosProtectionService.getInstance();
@@ -22,7 +24,7 @@ public class DosFilter implements Filter {
         if (dosProtectionService.isAllowed(servletRequest.getRemoteAddr())) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            ((HttpServletResponse) servletResponse).setStatus(429);
+            ((HttpServletResponse) servletResponse).setStatus(TOO_MANY_REQUESTS);
         }
     }
 

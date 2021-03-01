@@ -69,8 +69,8 @@ public class CheckoutPageServletTest {
 
     @Before
     public void setUp() throws OutOfStockException {
-        when(productDao.getProduct(0L)).thenReturn(p1);
-        when(productDao.getProduct(2L)).thenReturn(p2);
+        when(productDao.get(0L)).thenReturn(p1);
+        when(productDao.get(2L)).thenReturn(p2);
         Cart cart = new Cart();
         cartService.add(cart, 0L, 1);
         cartService.add(cart, 2L, 1);

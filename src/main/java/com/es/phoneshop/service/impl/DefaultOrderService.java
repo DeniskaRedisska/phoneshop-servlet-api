@@ -54,7 +54,7 @@ public class DefaultOrderService implements OrderService {
     public void placeOrder(Order order) {
         verifyNotNull(order);
         order.setSecureId(UUID.randomUUID().toString());
-        orderDao.saveOrder(order);
+        orderDao.save(order);
     }
 
     private BigDecimal calculateDeliveryCost() {
