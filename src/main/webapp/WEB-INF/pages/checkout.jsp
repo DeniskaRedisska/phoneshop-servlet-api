@@ -72,11 +72,11 @@
         </table>
         <h2>Your Details</h2>
             <table>
-                <tags:setParameter paramName="firstName" order="${order}" label="First name" errors="${errors}" type="text"/>
-                <tags:setParameter paramName="lastName" order="${order}" label="Last name" errors="${errors}" type="text"/>
-                <tags:setParameter paramName="phoneNumber" order="${order}" label="Phone" errors="${errors}" type="text"/>
-                <tags:setParameter paramName="deliveryDate" order="${order}" label="Delivery date" errors="${errors}" type="date"/>
-                <tags:setParameter paramName="deliveryAddress" order="${order}" label="Delivery address" errors="${errors}" type="text"/>
+                <tags:orderFormRow paramName="firstName" order="${order}" label="First name" errors="${errors}" type="text"/>
+                <tags:orderFormRow paramName="lastName" order="${order}" label="Last name" errors="${errors}" type="text"/>
+                <tags:orderFormRow paramName="phoneNumber" order="${order}" label="Phone" errors="${errors}" type="text"/>
+                <tags:orderFormRow paramName="deliveryDate" order="${order}" label="Delivery date" errors="${errors}" type="date"/>
+                <tags:orderFormRow paramName="deliveryAddress" order="${order}" label="Delivery address" errors="${errors}" type="text"/>
                 <tr>
                     <td>
                         Payment method<span style="color: red">*</span>

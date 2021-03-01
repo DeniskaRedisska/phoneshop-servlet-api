@@ -12,7 +12,7 @@ public class DosFilter implements Filter {
 
     private DosProtectionService dosProtectionService;
 
-    private final int TOO_MANY_REQUESTS = 429;
+    private static final int TOO_MANY_REQUESTS = 429;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

@@ -22,7 +22,6 @@ public class ValidationPredicateUtil {
             LocalDate parse;
             try {
                 parse = LocalDate.parse(s);
-                parse.isBefore(LocalDate.now());
             } catch (DateTimeParseException e) {
                 return false;
             }
