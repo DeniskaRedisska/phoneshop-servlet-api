@@ -55,6 +55,21 @@ img.product-tile {
     max-width: 64px;
 }
 
+.main_wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.description_wrapper {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px;
+}
+input{
+    width: 100px;
+}
+
 /* Page specific styles */
 body.product-list {
 

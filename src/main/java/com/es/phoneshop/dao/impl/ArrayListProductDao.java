@@ -1,6 +1,7 @@
 package com.es.phoneshop.dao.impl;
 
 import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.enums.SearchMode;
 import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
 import com.es.phoneshop.exceptions.ItemNotFoundException;
@@ -8,6 +9,7 @@ import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,6 +57,38 @@ public class ArrayListProductDao extends AbstractGenericArrayListDao<Product> im
         } finally {
             getReadLock().unlock();
         }
+    }
+
+    @Override
+    public List<Product> findProductWithAdvancedSearch(String description, BigDecimal minPrice, BigDecimal maxPrice,
+                                                       SearchMode searchMode) {
+        getReadLock().lock();
+        try {
+            String[] queryWords = (description != null && !description.equals("")) ? description.split("\\s+") : null;
+            return getItems().stream()
+                    .filter(product -> product.getStock() > 0)
+                    .filter(product -> product.getPrice() != null)
+                    .map(product -> Map.entry(product, getNumberOfCollisions(queryWords, product)))
+                    .filter(productLongEntry -> getFilter(productLongEntry, searchMode, queryWords))
+                    .filter(productLongEntry -> getPriceFilter(productLongEntry, minPrice, maxPrice))
+                    .sorted(getSortComparator(null, null))
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+        } finally {
+            getReadLock().unlock();
+        }
+    }
+
+    private boolean getPriceFilter(Map.Entry<Product, Long> productLongEntry, BigDecimal minPrice, BigDecimal maxPrice) {
+        if (minPrice == null && maxPrice == null) return true;
+        BigDecimal price = productLongEntry.getKey().getPrice();
+        return price.compareTo(minPrice) > 0 &&
+                price.compareTo(maxPrice) < 0;
+    }
+
+    private boolean getFilter(Map.Entry<Product, Long> productLongEntry, SearchMode mode, String[] queryWords) {
+        if (mode == SearchMode.ANY_WORD) return productLongEntry.getValue() > 0;
+        else return productLongEntry.getValue() == queryWords.length;
     }
 
     private long getNumberOfCollisions(String[] queryWords, Product product) {
