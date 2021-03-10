@@ -3,22 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
-<tags:master pageTitle="Product List">
+<tags:master pageTitle="Cart page">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/popup.css">
     <head>
         <title>Title</title>
     </head>
     <body>
-    <c:if test="${not empty param.message}">
-        <div class="success">
-                ${param.message}
-        </div>
-    </c:if>
-    <c:if test="${not empty errors}">
-        <div class="error">
-            Problem occurred updating a cart
-        </div>
-    </c:if>
+    <c:if test="${empty cart.items}"><h2>Cart is empty</h2></c:if>
+    <c:if test="${not empty cart.items}">
     <form method="post" action="${pageContext.request.contextPath}/cart">
         <table>
             <thead>
@@ -33,7 +25,6 @@
                 <td>quantity</td>
             </tr>
             </thead>
-            <c:if test="${empty cart.items}">Cart is empty</c:if>
             <c:forEach var="item" items="${cart.items}" varStatus="status">
                 <tr>
                     <td>
@@ -76,7 +67,7 @@
                     <td></td>
                     <td></td>
                     <td> Total Price:
-                        <fmt:formatNumber value="${cart.totalPrice}" type="currency"
+                        <fmt:formatNumber value="${cart.totalCost}" type="currency"
                                           currencySymbol="${cart.items.get(0).product.currency.symbol}"/>
                     </td>
                     <td>Total Quantity: ${cart.totalQuantity}</td>
@@ -88,5 +79,11 @@
         </p>
     </form>
     <form id="deleteCartItem" method="post"></form>
+    <form>
+        <p>
+            <button formaction="${pageContext.request.contextPath}/checkout">Checkout</button>
+        </p>
+    </form>
+    </c:if>
     </body>
 </tags:master>

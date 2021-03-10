@@ -1,7 +1,9 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.cart;
 
+import com.es.phoneshop.exceptions.OutOfStockException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.web.cart.CartPageServlet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,10 +37,11 @@ public class CartPageServletTest {
     private CartPageServlet servlet = new CartPageServlet();
 
     @Before
-    public void setUp(){
+    public void setUp() throws OutOfStockException {
         when(request.getParameterValues("productId")).thenReturn(new String[]{"0","1","2"});
         when(service.getCart(any())).thenReturn(new Cart());
         when(request.getSession()).thenReturn(any());
+
     }
 
     @Test

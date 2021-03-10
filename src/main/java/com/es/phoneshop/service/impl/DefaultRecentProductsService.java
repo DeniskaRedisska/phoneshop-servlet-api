@@ -70,7 +70,7 @@ public class DefaultRecentProductsService implements RecentProductsService {
             return recentProductIds.stream()
                     .skip(skipCount)
                     .limit(count)
-                    .map(dao::getProduct)
+                    .map(dao::get)
                     .collect(Collectors.toList());
         } finally {
             readLock.unlock();

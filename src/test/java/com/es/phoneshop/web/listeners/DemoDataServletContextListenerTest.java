@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.listeners;
 
 import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
@@ -37,7 +37,7 @@ public class DemoDataServletContextListenerTest {
     @Before
     public void setup() {
         when(servletContextEvent.getServletContext()).thenReturn(servletContext);
-        when(productDao.getProduct(any())).thenReturn(product);
+        when(productDao.get(any())).thenReturn(product);
     }
 
     @Test

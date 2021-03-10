@@ -13,6 +13,11 @@ public class CartItem implements Serializable {
         this.quantity = quantity;
     }
 
+    public CartItem(CartItem item) {
+        this.product = item.product;
+        this.quantity = item.quantity;
+    }
+
     public String toString() {
         return product.getCode() + ", " + quantity;
     }
@@ -23,10 +28,6 @@ public class CartItem implements Serializable {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public void incrementQuantity(int increment) {
-        quantity += increment;
     }
 
     public void setQuantity(int quantity) {

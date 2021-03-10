@@ -59,7 +59,7 @@ public class ProductDetailsPageServletTest {
     @Test
     public void testDaoInvokedMethod() throws ServletException, IOException {
         servlet.doGet(request, response);
-        verify(productDao).getProduct(anyLong());
+        verify(productDao).get(anyLong());
     }
 
     @Test

@@ -47,7 +47,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Long id = parseProductId(request);
-        request.setAttribute("product", productDao.getProduct(id));
+        request.setAttribute("product", productDao.get(id));
         request.setAttribute("cart", cartService.getCart(DataProviderFactory.getDataProvider(session)));
         setRecentProducts(request, session, id);
         request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);

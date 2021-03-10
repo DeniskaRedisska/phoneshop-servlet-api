@@ -35,8 +35,6 @@ public class ProductListPageServlet extends HttpServlet {
 
     private CartService cartService;
 
-    private final String SUCCESS_MSG = "Product added to cart";
-
     private final int skipCount = 0;
 
     @Override

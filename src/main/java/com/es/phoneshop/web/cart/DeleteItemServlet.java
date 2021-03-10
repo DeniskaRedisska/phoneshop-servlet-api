@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.cart;
 
 import com.es.phoneshop.factory.DataProviderFactory;
 import com.es.phoneshop.model.cart.Cart;

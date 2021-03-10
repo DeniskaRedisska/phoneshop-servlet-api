@@ -16,7 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Currency;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,8 +50,8 @@ public class DefaultCartServiceTest {
 
     @Before
     public void setUp() {
-        when(productDao.getProduct(0L)).thenReturn(p1);
-        when(productDao.getProduct(2L)).thenReturn(p2);
+        when(productDao.get(0L)).thenReturn(p1);
+        when(productDao.get(2L)).thenReturn(p2);
 
     }
 
@@ -71,6 +74,19 @@ public class DefaultCartServiceTest {
         cart.getItems().add(new CartItem(p1, 5));
         cartService.add(cart, 2L, 5);
         assertEquals(2, cart.getItems().size());
+    }
+
+    @Test
+    public void testAddToCartHugeAmount() throws OutOfStockException, ParseException {
+        int quantity = Integer.MAX_VALUE;
+        assertThrows(OutOfStockException.class, () -> cartService.add(cart, 2L, quantity));
+    }
+
+    @Test
+    public void testUpdateCartWithHugeAmount() throws OutOfStockException, ParseException {
+        int quantity = Integer.MAX_VALUE;
+        cartService.add(cart, 2L, 1);
+        assertThrows(OutOfStockException.class, () -> cartService.update(cart, 2L, quantity));
     }
 
     @Test
@@ -123,11 +139,11 @@ public class DefaultCartServiceTest {
 
     @Test
     public void testRecalculateCart() throws InvalidArgumentException, OutOfStockException {
-        cartService.add(cart,0L,1);
+        cartService.add(cart, 0L, 1);
         assertEquals(1, cart.getTotalQuantity());
-        assertEquals(new BigDecimal(100), cart.getTotalPrice());
-        cartService.add(cart,2L,1);
+        assertEquals(new BigDecimal(100), cart.getTotalCost());
+        cartService.add(cart, 2L, 1);
         assertEquals(2, cart.getTotalQuantity());
-        assertEquals(new BigDecimal(400), cart.getTotalPrice());
+        assertEquals(new BigDecimal(400), cart.getTotalCost());
     }
 }

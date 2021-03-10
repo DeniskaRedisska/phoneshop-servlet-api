@@ -19,7 +19,7 @@ import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
 
 public class DefaultCartService implements CartService {
 
-    private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
+    private static final String CART_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
 
     private ProductDao productDao;
 
@@ -40,7 +40,7 @@ public class DefaultCartService implements CartService {
     @Override
     public Cart getCart(DataProvider<Cart> dataProvider) {
         verifyNotNull(dataProvider);
-        return dataProvider.getAttribute(CART_SESSION_ATTRIBUTE, new Cart());
+        return dataProvider.getAttribute(CART_ATTRIBUTE, new Cart());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DefaultCartService implements CartService {
         verifyData(cart, productId, quantity);
         rwl.writeLock().lock();
         try {
-            Product product = productDao.getProduct(productId);
+            Product product = productDao.get(productId);
             Optional<CartItem> optional = getCartItem(cart, product);
             if (optional.isPresent()) {
                 setQuantity(product, optional.get(), quantity + optional.get().getQuantity());
@@ -61,8 +61,8 @@ public class DefaultCartService implements CartService {
         }
     }
 
-    private void addProduct(Cart cart, int quantity, Product product) {
-        if (quantity > product.getStock()) throw new InvalidArgumentException("Invalid quantity");
+    private void addProduct(Cart cart, int quantity, Product product) throws OutOfStockException {
+        if (quantity > product.getStock()) throw new OutOfStockException(product.getStock());
         cart.getItems().add(new CartItem(product, quantity));
     }
 
@@ -72,7 +72,7 @@ public class DefaultCartService implements CartService {
         verifyData(cart, productId, quantity);
         rwl.writeLock().lock();
         try {
-            Product product = productDao.getProduct(productId);
+            Product product = productDao.get(productId);
             Optional<CartItem> optional = getCartItem(cart, product);
             if (optional.isPresent()) {
                 setQuantity(product, optional.get(), quantity);
@@ -96,6 +96,19 @@ public class DefaultCartService implements CartService {
         }
     }
 
+    @Override
+    public void clearCart(Cart cart) {
+        verifyNotNull(cart);
+        rwl.writeLock().lock();
+        try {
+            cart.getItems().clear();
+            recalculateCart(cart);
+        } finally {
+            rwl.writeLock().unlock();
+        }
+
+    }
+
     private Optional<CartItem> getCartItem(Cart cart, Product product) {
         return cart.getItems().stream()
                 .filter(item -> item.getProduct().getId().equals(product.getId()))
@@ -114,7 +127,8 @@ public class DefaultCartService implements CartService {
     }
 
     private void verifyIsInStock(Product product, CartItem item, int quantity) throws OutOfStockException {
-        if (product.getStock() < item.getQuantity() + quantity)
+        if (product.getStock() < quantity ||
+                product.getStock() < item.getQuantity() + quantity)
             throw new OutOfStockException(product.getStock() - item.getQuantity());
     }
 
@@ -131,7 +145,7 @@ public class DefaultCartService implements CartService {
     }
 
     private void calculateTotalPrice(Cart cart) {
-        cart.setTotalPrice(cart.getItems().stream()
+        cart.setTotalCost(cart.getItems().stream()
                 .map(this::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 

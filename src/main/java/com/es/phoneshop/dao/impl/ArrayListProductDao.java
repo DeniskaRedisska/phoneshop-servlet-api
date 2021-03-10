@@ -3,33 +3,23 @@ package com.es.phoneshop.dao.impl;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.enums.SortField;
 import com.es.phoneshop.enums.SortType;
+import com.es.phoneshop.exceptions.ItemNotFoundException;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.es.phoneshop.utils.VerifyUtil.verifyNotNull;
-
-public class ArrayListProductDao implements ProductDao, Serializable {
-
-    private final List<Product> products;
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private final Lock readLock = readWriteLock.readLock();
-    private final Lock writeLock = readWriteLock.writeLock();
-    private long maxId;
+public class ArrayListProductDao extends AbstractGenericArrayListDao<Product> implements ProductDao, Serializable {
 
     private ArrayListProductDao() {
-        products = new ArrayList<>();
+        super(new ArrayList<>());
     }
 
     protected ArrayListProductDao(List<Product> list) {
-        products = list;
+        super(list);
     }
 
     private static class Singleton {
@@ -40,31 +30,21 @@ public class ArrayListProductDao implements ProductDao, Serializable {
         return Singleton.INSTANCE;
     }
 
-    public long getMaxId() {
-        return maxId;
-    }
-
     @Override
-    public Product getProduct(Long id) {
-        verifyNotNull(id);
-        readLock.lock();
+    public Product get(Long id) {
         try {
-            return products.stream()
-                    .filter(p -> id.equals(p.getId()))
-                    .findAny()
-                    .orElseThrow(() -> new ProductNotFoundException(id));
-        } finally {
-            readLock.unlock();
+            return super.get(id);
+        } catch (ItemNotFoundException exc) {
+            throw new ProductNotFoundException(id);
         }
     }
 
-
     @Override
     public List<Product> findProducts(String query, SortField sortField, SortType sortType) {
-        readLock.lock();
+        getReadLock().lock();
         try {
             String[] queryWords = (query != null && !query.equals("")) ? query.split("\\s+") : null;
-            return products.stream()
+            return getItems().stream()
                     .filter(product -> product.getStock() > 0)
                     .filter(product -> product.getPrice() != null)
                     .map(product -> Map.entry(product, getNumberOfCollisions(queryWords, product)))
@@ -73,7 +53,7 @@ public class ArrayListProductDao implements ProductDao, Serializable {
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
         } finally {
-            readLock.unlock();
+            getReadLock().unlock();
         }
     }
 
@@ -106,46 +86,4 @@ public class ArrayListProductDao implements ProductDao, Serializable {
         return Long.compare(p2.getValue(), p1.getValue());
     }
 
-
-    @Override
-    public void save(Product product) {
-        verifyNotNull(product);
-        writeLock.lock();
-        try {
-            if (product.getId() != null) {
-                updateProducts(product);
-            } else {
-                addProduct(product);
-            }
-        } finally {
-            writeLock.unlock();
-        }
-    }
-
-
-    private void addProduct(Product product) {
-        product.setId(maxId++);
-        products.add(product);
-    }
-
-    private void updateProducts(Product product) {
-        products.stream()
-                .filter(p -> product.getId().equals(p.getId()))
-                .findAny()
-                .ifPresentOrElse(
-                        val -> products.set(products.indexOf(val), product),
-                        () -> products.add(product)
-                );
-    }
-
-    @Override
-    public void delete(Long id) {
-        verifyNotNull(id);
-        writeLock.lock();
-        try {
-            products.removeIf(product -> id.equals(product.getId()));
-        } finally {
-            writeLock.unlock();
-        }
-    }
 }

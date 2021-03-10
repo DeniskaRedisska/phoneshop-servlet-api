@@ -5,7 +5,7 @@
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 <jsp:useBean id="recentProducts" type="java.util.ArrayList" scope="request"/>
-<tags:master pageTitle="Product List">
+<tags:master pageTitle="Product details">
     <head>
         <title>Product Details</title>
     </head>
@@ -15,22 +15,6 @@
     <p>
         Cart: ${cart}
     </p>
-
-    <c:choose>
-        <c:when test="${not empty errors}">
-            <div class="error">
-                An error occurred adding product to cart
-            </div>
-        </c:when>
-        <c:otherwise>
-            <c:if test="${not empty param.message}">
-                <div class="success">
-                    ${param.message}
-                </div>
-            </c:if>
-        </c:otherwise>
-    </c:choose>
-
     <form method="post"
           action="${pageContext.request.contextPath}/products/addToCart/${product.id}?backPath=products/${product.id}">
     <table>
